@@ -1,23 +1,23 @@
 import { Blob } from 'buffer';
-import { BinaryLike } from 'crypto';
+
+import { CiaHeader } from './CiaHeader';
 
 export class CiaWriter {
-  // TODO: separate ArrayBuffers to handle different parts of the file
-  private filedata: ArrayBuffer;
+  private header: CiaHeader;
 
   constructor() {
-    // TODO: move header logic into its own file and generate separately
-    this.filedata = new ArrayBuffer(4);
-    const headerSize = new DataView(this.filedata);
-    headerSize.setInt32(0, 0x2020);
+    this.header = new CiaHeader();
+
+    // NOTE: the header is 0x2020, but the next section (certificate chain) will start at 0x2040 because the data is aligned in 64-byte blocks
   }
 
   // TODO: should we use a different name than "write"?
   // Node.js doesn't support File; it supports Blob starting with v14
   public write = (): Blob => {
+    const ciaData = [this.header.write()];
+
     // TODO: piece together the final file from the individual sections
-    // "as BinaryLike" is required to fix a type issue
-    return new Blob([this.filedata as BinaryLike], {
+    return new Blob(ciaData, {
       type: 'application/octet-stream',
     });
   };

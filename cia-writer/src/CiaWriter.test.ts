@@ -6,10 +6,11 @@ import { CiaWriter } from './CiaWriter';
 let testCiaFile: Blob;
 
 beforeAll(() => {
-  testCiaFile = new CiaWriter().write();
+  testCiaFile = new CiaWriter().toBlob();
 });
 
 describe('CIA', () => {
+  // TODO: write some real tests :)
   test('dump cia contents', async () => {
     console.log('testCiaFile.arrayBuffer()=', await testCiaFile.arrayBuffer());
   });

@@ -6,12 +6,12 @@ import { CiaHeader } from './CiaHeader';
 let testCiaHeader: Blob;
 
 beforeAll(() => {
-  testCiaHeader = new CiaHeader().write();
+  testCiaHeader = new CiaHeader({ certificateChainSize: 0 }).toBlob();
 });
 
 describe('header', () => {
-  test('header size', async () => {
+  test('size in header should equal size of header', async () => {
     const dataView = new DataView(await testCiaHeader.arrayBuffer());
-    expect(dataView.getInt32(0, true)).toBe(0x2020);
+    expect(dataView.getInt32(0, true)).toBe(testCiaHeader.size);
   });
 });

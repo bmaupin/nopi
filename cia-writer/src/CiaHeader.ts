@@ -1,6 +1,12 @@
 import { Blob } from 'buffer';
 import { BinaryLike } from 'crypto';
 
+export interface CiaHeaderOptions {
+  certificateChainSize: number;
+}
+
+// TODO: is this class overengineered? if we always know the header size, we could just
+// create a fixed length ArrayBuffer for everything and write values at hardcoded locations
 export class CiaHeader {
   // All the parts of the CIA header, in order
   private ciaHeaderParts = {
@@ -15,27 +21,34 @@ export class CiaHeader {
     contentIndex: new ArrayBuffer(0x2000),
   };
 
-  constructor() {
-    // We can call this right away since the size of the header is known
-    this.setHeaderSize();
+  constructor(options: CiaHeaderOptions) {
+    CiaHeader.writeInt32(this.size, this.ciaHeaderParts.headerSize);
 
-    // TODO: set certificateChainSize, ticketSize, tmdFileSize, metaSize, contentSize, contentIndex
-    // An options variable in the constructor might be the easiest way
+    CiaHeader.writeInt32(
+      options.certificateChainSize,
+      this.ciaHeaderParts.certificateChainSize
+    );
+
+    // TODO: set ticketSize, tmdFileSize, metaSize, contentSize, contentIndex
   }
 
-  private setHeaderSize = () => {
+  // Write integer to a 4-byte little-endian integer; surely there's a better way to do this!
+  private static writeInt32(integer: number, destination: ArrayBuffer) {
+    const dataView = new DataView(destination);
+    dataView.setInt32(0, integer, true);
+  }
+
+  get size(): number {
     let size = 0;
 
     for (const ciaHeaderPart in this.ciaHeaderParts) {
       size += this.ciaHeaderParts[ciaHeaderPart].byteLength;
     }
 
-    // Write the size of the header to a 4-byte little-endian integer; surely there's a better way to do this!
-    const dataView = new DataView(this.ciaHeaderParts.headerSize);
-    dataView.setInt32(0, size, true);
-  };
+    return size;
+  }
 
-  public write = (): Blob => {
+  public toBlob = (): Blob => {
     const headerData = new Blob(
       Object.keys(this.ciaHeaderParts).map(
         // "as BinaryLike" is required to fix a type issue :/

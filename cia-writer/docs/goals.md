@@ -1,0 +1,7 @@
+- [ ] Generate minimal CIA
+  - [ ] Node.js support
+  - [ ] Browser support
+- [ ] Add support for compression
+- [ ] Add support for icon
+- [ ] Add support for banner
+- [ ] Add support for footer?

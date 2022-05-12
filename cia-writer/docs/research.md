@@ -1,4 +1,6 @@
-#### Create a minimal hello world CIA
+## Create a minimal hello world CIA
+
+#### Create the CIA
 
 1. Build a hello world ELF
 
@@ -31,3 +33,11 @@
    ```
    ./makerom -f cia -o hello-world.cia -target t -elf hello-world.elf -rsf app.rsf
    ```
+
+#### Content of the CIA
+
+- Header: 0x00 - 0x2040
+- Certificate chain: 0x2040 -
+  - First cert: 0x2040 - 0x2440
+  - Second: 0x2440 - 0x2740
+  - Third: 0x2740 - 0x2a40

@@ -1,3 +1,5 @@
+- [ ] Initial POC to generate CIA, with hard-coded values
+- [ ] Add support for custom values
 - [ ] Generate minimal CIA
   - [ ] Node.js support
   - [ ] Browser support

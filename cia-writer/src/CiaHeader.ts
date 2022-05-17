@@ -2,7 +2,7 @@ import { Blob } from 'buffer';
 import { BinaryLike } from 'crypto';
 
 export interface CiaHeaderOptions {
-  certificateChainSize: number;
+  certChainSize: number;
 }
 
 // TODO: is this class overengineered? if we always know the header size, we could just
@@ -13,7 +13,7 @@ export class CiaHeader {
     headerSize: new ArrayBuffer(4),
     ciaType: new ArrayBuffer(2),
     ciaVersion: new ArrayBuffer(2),
-    certificateChainSize: new ArrayBuffer(4),
+    certChainSize: new ArrayBuffer(4),
     ticketSize: new ArrayBuffer(4),
     tmdFileSize: new ArrayBuffer(4),
     metaSize: new ArrayBuffer(4),
@@ -25,8 +25,8 @@ export class CiaHeader {
     CiaHeader.writeInt32(this.size, this.ciaHeaderParts.headerSize);
 
     CiaHeader.writeInt32(
-      options.certificateChainSize,
-      this.ciaHeaderParts.certificateChainSize
+      options.certChainSize,
+      this.ciaHeaderParts.certChainSize
     );
 
     // TODO: set ticketSize, tmdFileSize, metaSize, contentSize, contentIndex

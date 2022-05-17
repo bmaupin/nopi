@@ -12,9 +12,9 @@ beforeAll(async () => {
 });
 
 describe('CIA', () => {
-  // TODO: write some real tests :)
-  test('dump cia contents', () => {
-    console.log('testCiaFile.arrayBuffer()=', testCiaArrayBuffer);
+  test('header is where it should be', () => {
+    const dataView = new DataView(testCiaArrayBuffer);
+    expect(dataView.getInt32(0x0)).toBe(0x20200000);
   });
 
   test('cert chain should be 64-byte aligned', () => {

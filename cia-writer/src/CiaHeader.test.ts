@@ -6,7 +6,7 @@ import { CiaHeader } from './CiaHeader';
 let testCiaHeader: Blob;
 
 beforeAll(() => {
-  testCiaHeader = new CiaHeader({ certificateChainSize: 0 }).toBlob();
+  testCiaHeader = new CiaHeader({ certChainSize: 0 }).toBlob();
 });
 
 describe('header', () => {

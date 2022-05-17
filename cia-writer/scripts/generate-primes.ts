@@ -159,11 +159,8 @@ const main = () => {
   // }
 
   let r = k;
-  while (true) {
+  while (r.mod(new jsbn.BigInteger([2])).equals(jsbn.BigInteger.ZERO)) {
     r = r.divide(new jsbn.BigInteger([2]));
-    if (!r.mod(new jsbn.BigInteger([2])).equals(jsbn.BigInteger.ZERO)) {
-      break;
-    }
   }
   console.log('r=', r.toString());
 

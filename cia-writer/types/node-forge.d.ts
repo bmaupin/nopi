@@ -254,6 +254,17 @@ declare module "node-forge" {
               algorithm?: string | undefined;
           }
 
+          // TODO: submit this upstream
+          function setPrivateKey(
+              n: jsbn.BigInteger,
+              e: jsbn.BigInteger,
+              d?: jsbn.BigInteger,
+              p?: jsbn.BigInteger,
+              q?: jsbn.BigInteger,
+              dP?: jsbn.BigInteger,
+              dQ?: jsbn.BigInteger,
+              qInv?: jsbn.BigInteger
+          ): PrivateKey;
           function setPublicKey(n: jsbn.BigInteger, e: jsbn.BigInteger): PublicKey;
 
           function generateKeyPair(bits?: number, e?: number, callback?: (err: Error, keypair: KeyPair) => void): KeyPair;

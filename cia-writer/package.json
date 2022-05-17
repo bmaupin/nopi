@@ -7,6 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
+    "lint": "eslint .",
+    "pretest": "eslint .",
     "test": "vitest"
   },
   "author": "",

@@ -31,7 +31,7 @@
 1. Convert the ELF to CIA
 
    ```
-   ./makerom -f cia -o hello-world.cia -target t -elf hello-world.elf -rsf app.rsf
+   makerom -f cia -o hello-world.cia -target t -elf hello-world.elf -rsf app.rsf
    ```
 
 #### Content of the CIA

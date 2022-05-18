@@ -1,4 +1,4 @@
-import { Blob } from 'buffer';
+import { Blob } from 'fetch-blob';
 
 import { CiaCertChain } from './CiaCertChain';
 import { CiaHeader } from './CiaHeader';

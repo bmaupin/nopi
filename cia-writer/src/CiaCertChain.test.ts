@@ -1,4 +1,3 @@
-import { Blob } from 'buffer';
 import { beforeAll, describe, expect, test } from 'vitest';
 
 import { CiaCertChain } from './CiaCertChain';

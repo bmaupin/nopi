@@ -1,5 +1,4 @@
-import { Blob } from 'buffer';
-import { BinaryLike } from 'crypto';
+import { Blob } from 'fetch-blob';
 
 export interface CiaHeaderOptions {
   certChainSize: number;
@@ -51,8 +50,7 @@ export class CiaHeader {
   public toBlob = (): Blob => {
     const headerData = new Blob(
       Object.keys(this.ciaHeaderParts).map(
-        // "as BinaryLike" is required to fix a type issue :/
-        (ciaHeaderPart) => this.ciaHeaderParts[ciaHeaderPart] as BinaryLike
+        (ciaHeaderPart) => this.ciaHeaderParts[ciaHeaderPart]
       ),
       {
         type: 'application/octet-stream',

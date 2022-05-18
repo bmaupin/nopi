@@ -1,4 +1,4 @@
-import { Blob } from 'buffer';
+import { Blob } from 'fetch-blob';
 
 import forge from 'node-forge';
 
@@ -158,7 +158,7 @@ export class CiaTicket {
   }
 
   calculateSignature() {
-    let ticketData = Uint8Array.from([
+    const ticketData = Uint8Array.from([
       ...CiaTicket.concatUint8Arrays(Object.values(this.ticketHeaderParts)),
       ...CiaTicket.concatUint8Arrays(
         Object.values(this.ticketContentIndexParts)

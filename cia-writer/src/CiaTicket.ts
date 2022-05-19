@@ -1,6 +1,8 @@
 import { Blob } from 'fetch-blob';
 
 import forge from 'node-forge';
+// Use pure JavaScript for node-forge so it can run in the browser
+forge.options.usePureJavaScript = true;
 
 export class CiaTicket {
   private signatureParts = {

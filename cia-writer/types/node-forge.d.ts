@@ -32,6 +32,10 @@ declare module "node-forge" {
   type OID = string;
   type Encoding = "raw" | "utf8";
 
+  namespace options {
+    let usePureJavaScript: Boolean;
+  }
+
   namespace jsbn {
       interface RandomGenerator {
           nextBytes(bytes: number[]): void;

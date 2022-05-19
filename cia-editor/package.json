@@ -4,8 +4,13 @@
   "description": "",
   "main": "src/CiaEditor.ts",
   "scripts": {
+    "lint": "eslint .",
+    "pretest": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.15.0"
+  }
 }

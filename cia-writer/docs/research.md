@@ -42,3 +42,12 @@
   - Second: 0x2440 - 0x2740
   - Third: 0x2740 - 0x2a40
 - Ticket: 0x2a40 - 0x2d90? + padding = 0x2dc0
+- TMD: 0x2dc0 -
+  - Signature: 0x2dc0 - 0x2f00
+  - Header: 0x2f00 -
+    - Content info record hash: 0x2fa4
+  - Content info records: 0x2fc4 -
+  - Content chunk records: 0x38c4 - 0x38f4
+  - Padding > 0x3900
+- Content: 0x3900
+  - Header: 0x3900 -

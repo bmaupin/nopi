@@ -51,3 +51,37 @@
   - Padding > 0x3900
 - Content: 0x3900
   - Header: 0x3900 -
+
+#### Create a hello world CIA with a RomFS
+
+1. Copy app.rsf
+
+   ```
+   cp app.rsf romfs.rsf
+   ```
+
+1. Edit romfs.rsf
+
+   ```
+   RootPath                : romfs:/test.txt
+   ```
+
+1. Create the RomFS
+
+   ```
+   mkdir romfs
+   echo test > romfs/test.txt
+   3dstool -ctf romfs romfs.bin --romfs-dir romfs/
+   ```
+
+1. Make the NCCH from the ELF plus the RomFS
+
+   ```
+   makerom -f ncch -o hello-world.ncch -elf ../hello-world.elf -romfs romfs.bin -rsf romfs.rsf
+   ```
+
+1. Make the CIA from the NCCH
+
+   ```
+   makerom -f cia -o hello-world.cia -content hello-world.ncch:0:0
+   ```

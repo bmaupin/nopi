@@ -2,7 +2,6 @@
   "name": "cia-editor",
   "version": "0.0.1",
   "description": "",
-  "main": "src/CiaEditor.ts",
   "scripts": {
     "lint": "eslint .",
     "pretest": "eslint .",
@@ -11,7 +10,14 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^17.0.35",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
     "eslint": "^8.15.0",
+    "typescript": "^4.6.4",
     "vitest": "^0.12.6"
+  },
+  "dependencies": {
+    "fetch-blob": "^3.1.5"
   }
 }

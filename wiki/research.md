@@ -85,3 +85,83 @@
    ```
    makerom -f cia -o hello-world.cia -content hello-world.ncch:0:0
    ```
+
+<!-- 1. Extract the previously-built CIA
+
+   ```
+   ctrtool --contents=contents ../hello-world.cia
+   mv contents.* contents.bin
+   3dstool -xtf cxi contents.bin --header header.bin --exh exheader.bin --exefs exefs.bin --logo logo.bin
+   ```
+
+1. Create a new CIA file
+
+   ```
+   makerom -f cia -o romfs.cia -code exefs.bin -romfs romfs.bin -exheader exheader.bin -rsf romfs.rsf
+   ``` -->
+
+## Create a test RetroArch CIA + ROM
+
+1. Download the Retroarch RSF template
+
+   [https://github.com/libretro/RetroArch/blob/master/pkg/ctr/tools/template.rsf](https://github.com/libretro/RetroArch/blob/master/pkg/ctr/tools/template.rsf)
+
+1. Modify the RSF file
+
+   1. Replace all variables with values from [https://github.com/libretro/RetroArch/blob/master/pkg/ctr/Makefile.cores](https://github.com/libretro/RetroArch/blob/master/pkg/ctr/Makefile.cores)
+
+      e.g. replace `$(APP_TITLE)` with `Gambatte Libretro`
+
+   1. Add this section after `BasicInfo`
+
+      ```
+      RomFs:
+        RootPath                : romfs
+      ```
+
+1. Create CIA with NSUI
+
+1. Extract the NSUI RomFS
+
+   ```
+   ctrtool --contents=contents ../nsui.cia
+   mv contents.* contents.bin
+   3dstool -xtf cxi contents.bin --romfs romfs.bin
+   ```
+
+1. Download RetroArch core from [https://buildbot.libretro.com/nightly/nintendo/3ds/latest/cia/](https://buildbot.libretro.com/nightly/nintendo/3ds/latest/cia/)
+
+1. Extract the RetroArch core contents
+
+   ```
+   ctrtool --contents=contents ../gambatte_libretro.cia
+   mv contents.0000.3c33a017 contents-retroarch.bin
+   3dstool -xtf cxi contents-retroarch.bin --header header.bin --exh exheader.bin --exefs exefs.bin --logo logo.bin
+   ```
+
+1. Extract the RetroArch core ExeFS
+
+   ```
+   3dstool -xutf exefs exefs.bin --exefs-dir exefsdir --header header.bin
+   ```
+
+1. Rebuild NCCH from RetroArch ExeFS and NSUI RomFS
+
+   ```
+   makerom -f ncch -o retroarch.ncch -code exefsdir/code.bin -banner exefsdir/banner.bnr -icon exefsdir/icon.icn -logo exefsdir/logo.darc.lz -exefslogo -exheader exheader.bin -romfs romfs.bin -rsf ../retroarch.rsf
+   ```
+
+1. Make the CIA from the NCCH
+
+   ```
+   makerom -f cia -o retroarch.cia -content retroarch.ncch:0:0
+   ```
+
+makerom -f ncch -o retroarch.ncch -code exefs.bin -exheader exheader.bin -romfs romfs.bin -rsf ../retroarch.rsf
+
+<!--  -->
+
+<!-- Updates header, but .code is wrong -->
+<!-- makerom -f ncch -o retroarch.ncch -code exefs.bin -exheader exheader.bin -romfs romfs.bin -rsf ../retroarch.rsf -->
+<!-- Doesn't update header -->
+<!-- 3dstool -ctf cxi newcxi.bin --header header.bin --exh exheader.bin --exefs exefs.bin --romfs romfs.bin -->

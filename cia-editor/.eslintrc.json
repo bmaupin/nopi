@@ -11,6 +11,18 @@
     "ignorePatterns": [
         "/types"
     ],
+    "overrides": [
+        {
+            "files": [
+                "*.test.ts"
+            ],
+            "rules": {
+                "no-restricted-imports": [
+                    "off"
+                ]
+            }
+        }
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",

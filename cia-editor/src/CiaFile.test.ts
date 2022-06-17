@@ -6,15 +6,22 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { CiaFile } from './CiaFile';
 
 let testCiaBlob: Blob;
+let testCiaArrayBuffer: ArrayBuffer;
 
 beforeAll(async () => {
-  const testCiaBuffer = await readFile(resolve(__dirname, 'testdata/test.cia'));
-  testCiaBlob = new Blob([testCiaBuffer]);
+  testCiaArrayBuffer = (await readFile(resolve(__dirname, 'testdata/test.cia')))
+    .buffer;
+  testCiaBlob = new Blob([testCiaArrayBuffer]);
 });
 
 describe('CiaFile', () => {
-  test('Create new CiaFile from file', () => {
-    const ciaFile = CiaFile.fromBlob(testCiaBlob);
+  test('Create new CiaFile from ArrayBuffer', () => {
+    const ciaFile = new CiaFile(testCiaArrayBuffer);
+    expect(ciaFile).toBeInstanceOf(CiaFile);
+  });
+
+  test('Create new CiaFile from Blob', async () => {
+    const ciaFile = await CiaFile.fromBlob(testCiaBlob);
     expect(ciaFile).toBeInstanceOf(CiaFile);
   });
 });

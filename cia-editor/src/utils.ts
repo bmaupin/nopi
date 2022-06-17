@@ -2,7 +2,7 @@ export const calculateAlignedSize = (
   length: number,
   alignment: number
 ): number => {
-  return length + (alignment - (length % alignment));
+  return length + (alignment - (length % alignment || alignment));
 };
 
 // https://stackoverflow.com/a/19746771/399105

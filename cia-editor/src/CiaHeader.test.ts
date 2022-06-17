@@ -16,8 +16,8 @@ beforeAll(async () => {
 });
 
 describe('header', () => {
-  test('get headerSize', async () => {
-    expect(testCiaHeader.headerSize).toBe(0x2020);
+  test('get size', async () => {
+    expect(testCiaHeader.size).toBe(0x2020);
   });
 
   test('get contentSize', async () => {

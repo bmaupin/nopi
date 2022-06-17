@@ -9,7 +9,7 @@ export class CiaHeader {
     this.dataView = new DataView(arrayBuffer, 0, 0x2020);
   }
 
-  get headerSize() {
+  get size() {
     return this.dataView.getUint32(0, true);
   }
 

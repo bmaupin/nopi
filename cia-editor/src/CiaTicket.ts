@@ -2,13 +2,21 @@ import { compareUint8Arrays } from './utils';
 
 // https://www.3dbrew.org/wiki/Ticket
 export class CiaTicket {
+  private arrayBuffer: ArrayBuffer;
+  private startingByte: number;
+
+  private readonly ticketDataSize = 0x210;
+
   private signatureType: Uint8Array;
-  signature: Uint8Array;
+  readonly signature: Uint8Array;
   titleKey: Uint8Array;
-  ticketId: Uint8Array;
+  readonly ticketId: Uint8Array;
   titleId: Uint8Array;
 
   constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
+    this.arrayBuffer = arrayBuffer;
+    this.startingByte = startingByte;
+
     this.signatureType = new Uint8Array(arrayBuffer, startingByte, 4);
 
     // TODO: implement functionality to write these properties
@@ -30,6 +38,7 @@ export class CiaTicket {
       0x8
     );
 
+    // TODO: titleId setter should be in CiaFile so we can set it everywhere at once (ticket, TMD, NCCH)
     this.titleId = new Uint8Array(
       arrayBuffer,
       startingByte + this.signatureSectionSize + 0x9c,
@@ -61,5 +70,9 @@ export class CiaTicket {
     } else {
       throw new Error('Unknown signature type in ticket');
     }
+  }
+
+  get size() {
+    return this.signatureSectionSize + this.ticketDataSize;
   }
 }

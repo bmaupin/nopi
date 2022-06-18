@@ -1,9 +1,10 @@
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 import { beforeAll, describe, expect, test } from 'vitest';
-import { CiaFile } from './CiaFile';
 
+import { CiaFile } from './CiaFile';
 import { CiaTicket } from './CiaTicket';
+import { fromHexString } from './testutils';
 
 let testCiaTicket: CiaTicket;
 
@@ -12,8 +13,7 @@ beforeAll(async () => {
     await readFile(resolve(__dirname, 'testdata/test.cia'))
   ).buffer;
   const ciaFile = new CiaFile(ciaArrayBuffer);
-  // TODO: remove hardcoded starting point???
-  testCiaTicket = new CiaTicket(ciaFile.arrayBuffer, 0x2a40);
+  testCiaTicket = ciaFile.ticket;
 });
 
 describe('ticket', () => {
@@ -38,10 +38,3 @@ describe('ticket', () => {
     expect(testCiaTicket.titleId).toEqual(fromHexString('000400000ff3ff00'));
   });
 });
-
-// https://stackoverflow.com/a/50868276/399105
-const fromHexString = (hexString: string): Uint8Array => {
-  return Uint8Array.from(
-    hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
-  );
-};

@@ -5,8 +5,29 @@ export const calculateAlignedSize = (
   return length + (alignment - (length % alignment || alignment));
 };
 
+// Returns the total size of the signature section (signature type + signature + padding)
+export const getSignatureSectionSize = (signatureType: Uint8Array) => {
+  if (
+    compareUint8Arrays(signatureType, new Uint8Array([0x00, 0x01, 0x00, 0x04]))
+  ) {
+    return 0x140;
+  } else {
+    throw new Error('Unknown signature type');
+  }
+};
+
+export const getSignatureSize = (signatureType: Uint8Array) => {
+  if (
+    compareUint8Arrays(signatureType, new Uint8Array([0x00, 0x01, 0x00, 0x04]))
+  ) {
+    return 0x100;
+  } else {
+    throw new Error('Unknown signature type');
+  }
+};
+
 // https://stackoverflow.com/a/19746771/399105
-export const compareUint8Arrays = (
+const compareUint8Arrays = (
   array1: Uint8Array,
   array2: Uint8Array
 ): boolean => {

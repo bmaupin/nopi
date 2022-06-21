@@ -1,6 +1,7 @@
 import { CiaCertChain } from './CiaCertChain';
 import { CiaHeader } from './CiaHeader';
 import { CiaTicket } from './CiaTicket';
+import { CiaTitleMetadata } from './CiaTitleMetadata';
 import { calculateAlignedSize } from './utils';
 
 // https://www.3dbrew.org/wiki/CIA
@@ -9,6 +10,7 @@ export class CiaFile {
   header: CiaHeader;
   certChain: CiaCertChain;
   ticket: CiaTicket;
+  titleMetadata: CiaTitleMetadata;
 
   constructor(arrayBuffer: ArrayBuffer) {
     this.arrayBuffer = arrayBuffer;
@@ -23,6 +25,15 @@ export class CiaFile {
       0x40
     );
     this.ticket = new CiaTicket(this.arrayBuffer, ticketStartingByte);
+
+    const titleMetadataStartingByte = calculateAlignedSize(
+      ticketStartingByte + this.ticket.size,
+      0x40
+    );
+    this.titleMetadata = new CiaTitleMetadata(
+      this.arrayBuffer,
+      titleMetadataStartingByte
+    );
   }
 
   public static async fromBlob(blob: Blob): Promise<CiaFile> {

@@ -17,6 +17,7 @@ export class CiaHeader {
     return this.dataView.getBigUint64(24, true);
   }
 
+  // TODO: contentSize setter should be in CiaFile so we can set it everywhere at once (header, TMD, NCCH)
   set contentSize(newContentSize: bigint) {
     this.dataView.setBigUint64(24, newContentSize, true);
   }

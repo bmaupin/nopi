@@ -16,7 +16,7 @@ beforeAll(async () => {
   testCiaTitleMetadata = ciaFile.titleMetadata;
 });
 
-describe('ticket', () => {
+describe('title metadata', () => {
   test('get signature', () => {
     // ctrtool only returns the first part of the signature, which should be plenty just to test
     expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(

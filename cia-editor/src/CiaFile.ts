@@ -1,5 +1,6 @@
 import { CiaCertChain } from './CiaCertChain';
 import { CiaHeader } from './CiaHeader';
+import { CiaNcch } from './CiaNcch';
 import { CiaTicket } from './CiaTicket';
 import { CiaTitleMetadata } from './CiaTitleMetadata';
 import { calculateAlignedSize } from './utils';
@@ -11,6 +12,7 @@ export class CiaFile {
   certChain: CiaCertChain;
   ticket: CiaTicket;
   titleMetadata: CiaTitleMetadata;
+  ncch: CiaNcch;
 
   constructor(arrayBuffer: ArrayBuffer) {
     this.arrayBuffer = arrayBuffer;
@@ -34,6 +36,12 @@ export class CiaFile {
       this.arrayBuffer,
       titleMetadataStartingByte
     );
+
+    const ncchStartingByte = calculateAlignedSize(
+      titleMetadataStartingByte + this.titleMetadata.size,
+      0x40
+    );
+    this.ncch = new CiaNcch(this.arrayBuffer, ncchStartingByte);
   }
 
   public static async fromBlob(blob: Blob): Promise<CiaFile> {

@@ -25,7 +25,7 @@ export class CiaTitleMetadata {
     );
 
     // 0x2f4c
-    // TODO: titleId setter should be in CiaFile so we can set it everywhere at once (ticket, TMD, NCCH)
+    // TODO: set title ID everywhere at once (ticket, TMD, NCCH)
     this.titleId = new Uint8Array(
       arrayBuffer,
       startingByte + getSignatureSectionSize(this.signatureType) + 0x4c,
@@ -33,6 +33,7 @@ export class CiaTitleMetadata {
     );
   }
 
+  // TODO: set content size everywhere at once (header, TMD, NCCH)
   // 0x38cc
   get contentSize(): bigint {
     const dataView = new DataView(
@@ -44,8 +45,6 @@ export class CiaTitleMetadata {
     return dataView.getBigUint64(0, false);
   }
 
-  // TODO: contentSize setter should be in CiaFile so we can set it everywhere at once (header, TMD, NCCH)
-
   // 0x38d4
   get contentHash() {
     return new Uint8Array(
@@ -53,5 +52,9 @@ export class CiaTitleMetadata {
       this.startingByte + getSignatureSectionSize(this.signatureType) + 0x9d4,
       0x20
     );
+  }
+
+  get size() {
+    return getSignatureSectionSize(this.signatureType) + 0x9f4;
   }
 }

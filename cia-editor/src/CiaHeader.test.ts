@@ -21,6 +21,6 @@ describe('header', () => {
   });
 
   test('get contentSize', async () => {
-    expect(testCiaHeader.contentSize).toBe(BigInt(0x23000));
+    expect(testCiaHeader.contentSize).toBe(BigInt(0xc000));
   });
 });

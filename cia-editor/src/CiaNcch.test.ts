@@ -21,13 +21,13 @@ describe('NCCH', () => {
     // just compare the first line of the signature from ctrtool
     expect(testCiaNcch.signature.slice(0, 32)).toEqual(
       fromHexString(
-        '3073F9ECB9919F209A1501F5A16CF006E0160505C308D593E48248B0F22E0B9E'
+        '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
       )
     );
   });
 
   test('get contentSize', () => {
-    expect(testCiaNcch.size).toEqual(0x23000);
+    expect(testCiaNcch.size).toEqual(0x0000c000);
   });
 
   test('get titleId', () => {

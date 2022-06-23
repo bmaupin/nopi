@@ -1,1 +1,7 @@
 node_modules
+src/testdata/a.out
+src/testdata/icon.smdh
+src/testdata/romfs/
+src/testdata/test.c
+src/testdata/test.ncch
+src/testdata/test.png

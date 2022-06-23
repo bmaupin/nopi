@@ -20,7 +20,7 @@ describe('title metadata', () => {
   test('get signature', () => {
     // ctrtool only returns the first part of the signature, which should be plenty just to test
     expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
-      fromHexString('2DCB10B8')
+      fromHexString('7A7F734B')
     );
   });
 
@@ -31,13 +31,13 @@ describe('title metadata', () => {
   });
 
   test('get contentSize', async () => {
-    expect(testCiaTitleMetadata.contentSize).toEqual(BigInt(0x23000));
+    expect(testCiaTitleMetadata.contentSize).toEqual(BigInt(0xc000));
   });
 
   test('get contentHash', () => {
     expect(testCiaTitleMetadata.contentHash).toEqual(
       fromHexString(
-        'A87279E2E1CBF46C60277F0166D1CCD5F7AF8FCF52E201EF9D555B90BD2044C7'
+        '44CC44CB6E1726BB4641122E0161560AFC9F5A974BF802152CC3A5C25EC45666'
       )
     );
   });

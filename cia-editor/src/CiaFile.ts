@@ -1,6 +1,7 @@
 import { CiaCertChain } from './CiaCertChain';
 import { CiaHeader } from './CiaHeader';
 import { CiaNcch } from './CiaNcch';
+import { CiaRomFs } from './CiaRomFs';
 import { CiaTicket } from './CiaTicket';
 import { CiaTitleMetadata } from './CiaTitleMetadata';
 import { calculateAlignedSize } from './utils';
@@ -8,11 +9,13 @@ import { calculateAlignedSize } from './utils';
 // https://www.3dbrew.org/wiki/CIA
 export class CiaFile {
   arrayBuffer: ArrayBuffer;
+
   header: CiaHeader;
   certChain: CiaCertChain;
   ticket: CiaTicket;
   titleMetadata: CiaTitleMetadata;
   ncch: CiaNcch;
+  romFs: CiaRomFs;
 
   constructor(arrayBuffer: ArrayBuffer) {
     this.arrayBuffer = arrayBuffer;
@@ -42,6 +45,13 @@ export class CiaFile {
       0x40
     );
     this.ncch = new CiaNcch(this.arrayBuffer, ncchStartingByte);
+
+    // TODO: implement this
+    // const exeFsStartingByte = ncchStartingByte + this.ncch.exeFsOffset;
+    // this.exeFs = new CiaExeFs(this.arrayBuffer, exeFsStartingByte);
+
+    const romFsStartingByte = ncchStartingByte + this.ncch.romFsOffset;
+    this.romFs = new CiaRomFs(this.arrayBuffer, romFsStartingByte);
   }
 
   public static async fromBlob(blob: Blob): Promise<CiaFile> {

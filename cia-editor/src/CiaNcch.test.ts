@@ -42,6 +42,10 @@ describe('NCCH', () => {
     expect(testCiaNcch.productCode).toEqual('CTR-P-CTAP');
   });
 
+  test('get romFsOffset', () => {
+    expect(testCiaNcch.romFsOffset).toEqual(0x00008000);
+  });
+
   test('get romFsSize', () => {
     expect(testCiaNcch.romFsSize).toEqual(0x00004000);
   });

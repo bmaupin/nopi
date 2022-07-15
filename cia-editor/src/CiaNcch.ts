@@ -1,3 +1,4 @@
+// NCCH is sometimes referred to as "content"
 // https://www.3dbrew.org/wiki/NCCH
 export class CiaNcch {
   private arrayBuffer: ArrayBuffer;
@@ -17,6 +18,7 @@ export class CiaNcch {
   }
 
   // TODO: this needs to be set
+  // TODO: should this be the contentSize??
   // 0x3a04
   // "Content size, in media units (1 media unit = 0x200 bytes)" 🤷‍♂️
   // https://www.3dbrew.org/wiki/NCCH#NCCH_Header
@@ -61,6 +63,17 @@ export class CiaNcch {
     );
     // Decode the text and remove the null characters at the end
     return new TextDecoder('utf8').decode(uintArray).replace(/\0.*$/g, '');
+  }
+
+  // 0x3ab0
+  get romFsOffset() {
+    const dataView = new DataView(
+      this.arrayBuffer,
+      this.startingByte + 0x1b0,
+      0x4
+    );
+    const romFsOffsetInMediaUnits = dataView.getUint32(0, true);
+    return romFsOffsetInMediaUnits * 0x200;
   }
 
   // 0x3ab4

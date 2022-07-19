@@ -30,7 +30,7 @@ describe('title metadata', () => {
     );
   });
 
-  test('get contentSize', async () => {
+  test('get contentSize', () => {
     expect(testCiaTitleMetadata.contentSize).toEqual(BigInt(0xc000));
   });
 

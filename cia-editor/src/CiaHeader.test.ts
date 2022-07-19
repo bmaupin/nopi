@@ -16,11 +16,11 @@ beforeAll(async () => {
 });
 
 describe('header', () => {
-  test('get size', async () => {
+  test('get size', () => {
     expect(testCiaHeader.size).toBe(0x2020);
   });
 
-  test('get contentSize', async () => {
+  test('get contentSize', () => {
     expect(testCiaHeader.contentSize).toBe(BigInt(0xc000));
   });
 });

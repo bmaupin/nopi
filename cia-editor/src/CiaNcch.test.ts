@@ -27,7 +27,7 @@ describe('NCCH', () => {
   });
 
   test('get contentSize', () => {
-    expect(testCiaNcch.size).toEqual(0x0000c000);
+    expect(testCiaNcch.contentSize).toEqual(0x0000c000);
   });
 
   test('get titleId', () => {

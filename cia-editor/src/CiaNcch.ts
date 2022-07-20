@@ -1,28 +1,27 @@
 // NCCH is sometimes referred to as "content"
 // https://www.3dbrew.org/wiki/NCCH
+// Starts at 0x3900
 export class CiaNcch {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
 
-  readonly signature: Uint8Array;
-
   constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
     this.arrayBuffer = arrayBuffer;
     this.startingByte = startingByte;
-
-    // TODO: implement functionality to write these properties
-
-    // TODO: move this into a getter for more consistency?
-    // 0x3900
-    this.signature = new Uint8Array(arrayBuffer, startingByte, 0x100);
   }
 
-  // TODO: this needs to be set
-  // TODO: should this be the contentSize??
+  // TODO: this needs a setter
+  // 0x3900
+  get signature() {
+    return new Uint8Array(this.arrayBuffer, this.startingByte, 0x100);
+  }
+
+  // TODO: this needs a setter
+  // TODO: set content size everywhere at once (header, TMD, NCCH)
   // 0x3a04
   // "Content size, in media units (1 media unit = 0x200 bytes)" 🤷‍♂️
   // https://www.3dbrew.org/wiki/NCCH#NCCH_Header
-  get size() {
+  get contentSize() {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x104,
@@ -32,7 +31,8 @@ export class CiaNcch {
     return contentSizeInMediaUnits * 0x200;
   }
 
-  // TODO: set content size everywhere at once (header, TMD, NCCH)
+  // TODO: this needs a setter
+  // TODO: set title ID everywhere at once (ticket, TMD, NCCH)
   // 0x3a08
   get titleId() {
     return new Uint8Array(
@@ -43,8 +43,9 @@ export class CiaNcch {
     ).reverse();
   }
 
+  // TODO: this needs a setter
   // TODO: update this when we update title ID
-  // 0x3a08
+  // 0x3a18
   get programId() {
     return new Uint8Array(
       this.arrayBuffer,
@@ -54,6 +55,7 @@ export class CiaNcch {
     ).reverse();
   }
 
+  // TODO: does this need to be changed/be unique?
   // 0x3a50
   get productCode() {
     const uintArray = new Uint8Array(
@@ -76,6 +78,7 @@ export class CiaNcch {
     return romFsOffsetInMediaUnits * 0x200;
   }
 
+  // TODO: this needs a setter
   // 0x3ab4
   // "RomFS size, in media units"
   // https://www.3dbrew.org/wiki/NCCH#NCCH_Header
@@ -89,6 +92,7 @@ export class CiaNcch {
     return romFsSizeInMediaUnits * 0x200;
   }
 
+  // TODO: this needs a setter
   // 0x3ae0
   get romFsHash() {
     return new Uint8Array(this.arrayBuffer, this.startingByte + 0x1e0, 0x20);

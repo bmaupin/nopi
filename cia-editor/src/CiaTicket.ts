@@ -1,6 +1,7 @@
 import { getSignatureSectionSize, getSignatureSize } from './utils';
 
 // https://www.3dbrew.org/wiki/Ticket
+// Starts at 0x2a40
 export class CiaTicket {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
@@ -19,19 +20,24 @@ export class CiaTicket {
 
     this.signatureType = new Uint8Array(arrayBuffer, startingByte, 4);
 
-    // TODO: implement functionality to write these properties
+    // TODO: this needs a setter
+    // 0x2a44
     this.signature = new Uint8Array(
       arrayBuffer,
       startingByte + 4,
       getSignatureSize(this.signatureType)
     );
 
+    // TODO: this needs a setter
+    // 0x2bff
     this.titleKey = new Uint8Array(
       arrayBuffer,
       startingByte + getSignatureSectionSize(this.signatureType) + 0x7f,
       0x10
     );
 
+    // TODO: this needs a setter
+    // 0x2c10
     this.ticketId = new Uint8Array(
       arrayBuffer,
       startingByte + getSignatureSectionSize(this.signatureType) + 0x90,
@@ -39,6 +45,8 @@ export class CiaTicket {
     );
 
     // TODO: titleId setter should be in CiaFile so we can set it everywhere at once (ticket, TMD, NCCH)
+    // TODO: this needs a setter
+    // 0x2c1c
     this.titleId = new Uint8Array(
       arrayBuffer,
       startingByte + getSignatureSectionSize(this.signatureType) + 0x9c,

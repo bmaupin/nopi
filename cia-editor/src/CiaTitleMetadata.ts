@@ -1,6 +1,7 @@
 import { getSignatureSectionSize, getSignatureSize } from './utils';
 
 // https://www.3dbrew.org/wiki/Title_metadata
+// Starts at 0x2dc0
 export class CiaTitleMetadata {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
@@ -16,7 +17,7 @@ export class CiaTitleMetadata {
     // 0x2dc0
     this.signatureType = new Uint8Array(arrayBuffer, startingByte, 4);
 
-    // TODO: implement functionality to write these properties
+    // TODO: this needs a setter
     // 0x2dc4
     this.signature = new Uint8Array(
       arrayBuffer,
@@ -24,8 +25,9 @@ export class CiaTitleMetadata {
       getSignatureSize(this.signatureType)
     );
 
-    // 0x2f4c
+    // TODO: this needs a setter
     // TODO: set title ID everywhere at once (ticket, TMD, NCCH)
+    // 0x2f4c
     this.titleId = new Uint8Array(
       arrayBuffer,
       startingByte + getSignatureSectionSize(this.signatureType) + 0x4c,
@@ -33,6 +35,27 @@ export class CiaTitleMetadata {
     );
   }
 
+  // TODO: this needs a setter
+  // 0x2fa4
+  get infoRecordHash() {
+    return new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + getSignatureSectionSize(this.signatureType) + 0xa4,
+      0x20
+    );
+  }
+
+  // TODO: this needs a setter
+  // 0x2fc8
+  get contentChunkHash() {
+    return new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + getSignatureSectionSize(this.signatureType) + 0xc8,
+      0x20
+    );
+  }
+
+  // TODO: this needs a setter
   // TODO: set content size everywhere at once (header, TMD, NCCH)
   // 0x38cc
   get contentSize(): bigint {
@@ -45,6 +68,7 @@ export class CiaTitleMetadata {
     return dataView.getBigUint64(0, false);
   }
 
+  // TODO: this needs a setter
   // 0x38d4
   get contentHash() {
     return new Uint8Array(

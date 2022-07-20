@@ -34,7 +34,7 @@ describe('RomFS', () => {
     expect(testCiaRomFs.level3HashdataSize).toBe(BigInt(0x95));
   });
 
-  // To get this value: npx ts-node --files scripts/extract-content.ts ../cia-editor/src/testdata/test.cia 0xb960 0xb980
+  // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xb960 0xb980
   test('get masterHash', () => {
     expect(testCiaRomFs.masterHash).toEqual(
       new Uint8Array([
@@ -43,5 +43,17 @@ describe('RomFS', () => {
         0x17, 0xa5, 0xae, 0x2d, 0xac, 0xee, 0x3e, 0xa7,
       ])
     );
+  });
+
+  test('get fileTableOffset', () => {
+    expect(testCiaRomFs.fileTableOffset).toBe(0x58);
+  });
+
+  test('get fileTableLength', () => {
+    expect(testCiaRomFs.fileTableLength).toBe(0x30);
+  });
+
+  test('get files', () => {
+    expect(testCiaRomFs.files[0].fileName).toEqual('test.txt');
   });
 });

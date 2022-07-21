@@ -63,7 +63,7 @@ export class RomFsFileMetadata {
     return new TextDecoder('utf-16le').decode(uintArray);
   }
 
-  get size() {
+  get size(): number {
     return calculateAlignedSize(0x20 + this.fileNameLength, 0x4);
   }
 }

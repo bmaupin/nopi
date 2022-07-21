@@ -1,7 +1,7 @@
 // https://www.3dbrew.org/wiki/RomFS
 // http://problemkaputt.de/gbatek-3ds-files-ncch-romfs.htm
 
-import { RomFsFileMetadata } from './RomFsFileMetadata';
+import { RomFsFile } from './RomFsFile';
 import { calculateAlignedSize } from './utils';
 
 // first 0x5c bytes are the header
@@ -179,15 +179,15 @@ export class CiaRomFs {
   get files() {
     const fileTableStartingByte =
       this.startingByte + CiaRomFs.LEVEL_3_OFFSET + this.fileTableOffset;
-    const currentFiles: RomFsFileMetadata[] = [];
+    const currentFiles: RomFsFile[] = [];
 
     let currentByte = fileTableStartingByte;
-    let currentFile: RomFsFileMetadata;
+    let currentFile: RomFsFile;
 
     while (currentByte < fileTableStartingByte + this.fileTableLength) {
-      currentFile = new RomFsFileMetadata(this.arrayBuffer, currentByte);
+      currentFile = new RomFsFile(this.arrayBuffer, currentByte);
       currentFiles.push(currentFile);
-      currentByte += currentFile.size;
+      currentByte += currentFile.metadataSize;
     }
 
     return currentFiles;
@@ -240,6 +240,7 @@ export class CiaRomFs {
 
    */
 
+  // Level 1 contains hashes for each 0x1000 block of level 2
   get level1Hashes() {
     const level1HashesStartingByte =
       this.startingByte +
@@ -259,6 +260,7 @@ export class CiaRomFs {
     return hashes;
   }
 
+  // Level 2 contains hashes for each 0x1000 block of level 3
   get level2Hashes() {
     const level2HashesStartingByte =
       this.startingByte +

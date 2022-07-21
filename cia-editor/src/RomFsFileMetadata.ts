@@ -9,11 +9,13 @@ export class RomFsFileMetadata {
     this.startingByte = startingByte;
   }
 
+  // TODO: unused; remove this?
   get directoryOffset() {
     const dataView = new DataView(this.arrayBuffer, this.startingByte, 0x4);
     return dataView.getUint32(0, true);
   }
 
+  // TODO: unused; remove this?
   get nextFileOffset() {
     const dataView = new DataView(
       this.arrayBuffer,

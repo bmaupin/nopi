@@ -40,9 +40,13 @@ export class CiaRomFs {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x14,
-      0x8
+      // Technically this and the level 2/3 sizes are 64-bit, but it becomes a bit of a
+      // nightmare to pass around BigInt values everywhere; some places (like the
+      // Uint8Array constructor) simply won't take a BigInt. A 32-bit value can represent
+      // up to 4 GB of data, so I think that's more than enough for our use.
+      0x4
     );
-    return dataView.getBigUint64(0, true);
+    return dataView.getUint32(0, true);
   }
 
   // test.cia: 0xb91c
@@ -65,9 +69,9 @@ export class CiaRomFs {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x2c,
-      0x8
+      0x4
     );
-    return dataView.getBigUint64(0, true);
+    return dataView.getUint32(0, true);
   }
 
   // TODO: this needs a setter
@@ -78,9 +82,9 @@ export class CiaRomFs {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x44,
-      0x8
+      0x4
     );
-    return dataView.getBigUint64(0, true);
+    return dataView.getUint32(0, true);
   }
 
   // test.cia: 0xb94c
@@ -159,6 +163,7 @@ export class CiaRomFs {
     return dataView.getUint32(0, true);
   }
 
+  // test.cia: 0xc924
   // retroarch cia: 0x4a0924
   get fileDataOffset() {
     const dataView = new DataView(
@@ -186,5 +191,91 @@ export class CiaRomFs {
     }
 
     return currentFiles;
+  }
+
+  /*
+    - bottom_menu.png
+      - location: 0x4a0f60 - 0x4a281a
+         0x49f900 + 0x1000 + file data offset (0x290) + offset (0x3d0)
+    - fceumm_libretro.cia
+      - location: 04a2820 - 0x4a2820 (0 bytes)
+          0x49f900 + 0x1000 + file data offset (0x290) + offset (0x1c90)
+  */
+
+  /* TODO: what after files is different?
+     - dummy: PNG starts at 0x004a0f60
+     - modified: PNG starts at 0x004e0f60
+
+  */
+
+  // TODO: handle this difference
+  // I believe this is "level 1", which are hashes of each 0x1000-byte block in level 2 :P
+  // get level 1 offset and size from the RomFS header
+  // 0x20 bytes; looks like a hash
+  // - dummy: 0x004a2900 - 0x004a2920
+  // - modified: 0x004e2900 - 0x004e2920
+  //
+  /*
+     - Level 1 starting location
+       - info
+        - level 3 block size is 0c (2^12 = 0x1000)
+        - level 3 size of directory/file area (at 0x44) = 0x1f20
+       - calculation
+          0x49f900 (starting byte) + (0x1f20 (level 3 size) rounded up to nearest block size (0x1000) = 0x2000?)
+
+
+      - this.startingByte + 0x1000 + level 3 size? (at 0x44) = 0x1f20 = 4a2820
+  */
+
+  // TODO: handle this difference
+  // I believe this is "level 2", which are hashes of each 0x1000-byte block in level 3 :P
+  // get level 2 offset and size from the RomFS header
+  // 0x840 bytes; ... is this the file lookup table?
+  // - dummy: 0x004a3900 - 0x004a4140
+  // - modified: 0x004e3900 - 0x004e4140
+  /*
+
+    Starting offset calculation, I think
+     level 1 starting location + (level 1 size (at 0x14) = 0x20, rounded up to nearest block size (0x1000) = 0x1000)
+
+   */
+
+  get level1Hashes() {
+    const level1HashesStartingByte =
+      this.startingByte +
+      CiaRomFs.LEVEL_3_OFFSET +
+      calculateAlignedSize(this.level3Size, this.level3BlockSize);
+    const hashes: Uint8Array[] = [];
+
+    let currentByte = level1HashesStartingByte;
+
+    while (currentByte < level1HashesStartingByte + this.level1Size) {
+      const hash = new Uint8Array(this.arrayBuffer, currentByte, 0x20);
+      hashes.push(hash);
+
+      currentByte += 0x20;
+    }
+
+    return hashes;
+  }
+
+  get level2Hashes() {
+    const level2HashesStartingByte =
+      this.startingByte +
+      CiaRomFs.LEVEL_3_OFFSET +
+      calculateAlignedSize(this.level3Size, this.level3BlockSize) +
+      calculateAlignedSize(this.level1Size, this.level1BlockSize);
+    const hashes: Uint8Array[] = [];
+
+    let currentByte = level2HashesStartingByte;
+
+    while (currentByte < level2HashesStartingByte + this.level1Size) {
+      const hash = new Uint8Array(this.arrayBuffer, currentByte, 0x20);
+      hashes.push(hash);
+
+      currentByte += 0x20;
+    }
+
+    return hashes;
   }
 }

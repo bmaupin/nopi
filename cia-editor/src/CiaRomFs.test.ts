@@ -26,12 +26,24 @@ describe('RomFS', () => {
     expect(testCiaRomFs.masterHashSize).toBe(0x20);
   });
 
-  test('get level2HashdataSize', () => {
-    expect(testCiaRomFs.level2HashdataSize).toBe(BigInt(0x20));
+  test('get level1Size', () => {
+    expect(testCiaRomFs.level1Size).toBe(BigInt(0x20));
   });
 
-  test('get level3HashdataSize', () => {
-    expect(testCiaRomFs.level3HashdataSize).toBe(BigInt(0x95));
+  test('get level1BlockSize', () => {
+    expect(testCiaRomFs.level1BlockSize).toBe(0x1000);
+  });
+
+  test('get level2Size', () => {
+    expect(testCiaRomFs.level2Size).toBe(BigInt(0x20));
+  });
+
+  test('get level3Size', () => {
+    expect(testCiaRomFs.level3Size).toBe(BigInt(0x95));
+  });
+
+  test('get level3BlockSize', () => {
+    expect(testCiaRomFs.level3BlockSize).toBe(0x1000);
   });
 
   // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xb960 0xb980
@@ -55,5 +67,9 @@ describe('RomFS', () => {
 
   test('get files', () => {
     expect(testCiaRomFs.files[0].fileName).toEqual('test.txt');
+  });
+
+  test('get level1Hashes', () => {
+    testCiaRomFs.level1Hashes;
   });
 });

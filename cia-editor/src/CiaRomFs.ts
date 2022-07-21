@@ -2,11 +2,14 @@
 // http://problemkaputt.de/gbatek-3ds-files-ncch-romfs.htm
 
 import { RomFsFileMetadata } from './RomFsFileMetadata';
+import { calculateAlignedSize } from './utils';
 
 // first 0x5c bytes are the header
 export class CiaRomFs {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
+
+  private static LEVEL_3_OFFSET = 0x1000;
 
   constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
     this.arrayBuffer = arrayBuffer;
@@ -19,6 +22,7 @@ export class CiaRomFs {
     return new Uint8Array(this.arrayBuffer, this.startingByte, 0x8);
   }
 
+  // test.cia: 0xb908
   // retroarch cia: 0x49f908
   get masterHashSize() {
     const dataView = new DataView(
@@ -29,9 +33,35 @@ export class CiaRomFs {
     return dataView.getUint32(0, true);
   }
 
+  // Size of level 1 (before padding to block size)
+  // test.cia: 0xb914
+  // retroarch cia: 0x49f914
+  get level1Size() {
+    const dataView = new DataView(
+      this.arrayBuffer,
+      this.startingByte + 0x14,
+      0x8
+    );
+    return dataView.getBigUint64(0, true);
+  }
+
+  // test.cia: 0xb91c
+  // retroarch cia: 0x49f91c
+  get level1BlockSize() {
+    const dataView = new DataView(
+      this.arrayBuffer,
+      this.startingByte + 0x1c,
+      0x4
+    );
+    const level1BlockSizeLog2 = dataView.getUint32(0, true);
+    return Math.pow(2, level1BlockSizeLog2);
+  }
+
   // TODO: this needs a setter
+  // Size of level 2 (before padding to block size)
+  // test.cia: 0xb92c
   // retroarch cia: 0x49f92c
-  get level2HashdataSize() {
+  get level2Size() {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x2c,
@@ -41,8 +71,10 @@ export class CiaRomFs {
   }
 
   // TODO: this needs a setter
+  // Size of level 3 (before padding to block size)
+  // test.cia: 0xb944
   // retroarch cia: 0x49f944
-  get level3HashdataSize() {
+  get level3Size() {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x44,
@@ -51,7 +83,20 @@ export class CiaRomFs {
     return dataView.getBigUint64(0, true);
   }
 
+  // test.cia: 0xb94c
+  // retroarch cia: 0x49f94c
+  get level3BlockSize() {
+    const dataView = new DataView(
+      this.arrayBuffer,
+      this.startingByte + 0x4c,
+      0x4
+    );
+    const level3BlockSizeLog2 = dataView.getUint32(0, true);
+    return Math.pow(2, level3BlockSizeLog2);
+  }
+
   // TODO: this needs a setter
+  // 0xb960
   // retroarch cia: 0x49f960
   get masterHash() {
     return new Uint8Array(
@@ -128,7 +173,7 @@ export class CiaRomFs {
   // retroarch cia: 0x4a09f8
   get files() {
     const fileTableStartingByte =
-      this.startingByte + 0x1000 + this.fileTableOffset;
+      this.startingByte + CiaRomFs.LEVEL_3_OFFSET + this.fileTableOffset;
     const currentFiles: RomFsFileMetadata[] = [];
 
     let currentByte = fileTableStartingByte;

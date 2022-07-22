@@ -8,7 +8,6 @@ export class CiaTitleMetadata {
 
   private signatureType: Uint8Array;
   readonly signature: Uint8Array;
-  readonly titleId: Uint8Array;
 
   constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
     this.arrayBuffer = arrayBuffer;
@@ -24,15 +23,19 @@ export class CiaTitleMetadata {
       startingByte + 4,
       getSignatureSize(this.signatureType)
     );
+  }
 
-    // TODO: this needs a setter
-    // TODO: set title ID everywhere at once (ticket, TMD, NCCH)
-    // 0x2f4c
-    this.titleId = new Uint8Array(
-      arrayBuffer,
-      startingByte + getSignatureSectionSize(this.signatureType) + 0x4c,
+  // 0x2f4c
+  get titleId() {
+    return new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + getSignatureSectionSize(this.signatureType) + 0x4c,
       0x8
     );
+  }
+
+  set titleId(newTitleId: Uint8Array) {
+    this.titleId.set(newTitleId);
   }
 
   // TODO: this needs a setter

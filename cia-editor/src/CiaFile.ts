@@ -58,5 +58,27 @@ export class CiaFile {
     return new CiaFile(await blob.arrayBuffer());
   }
 
+  // The title ID occurs at different points in the CIA file; we'll consider the one in
+  // the ticket to be the authoritative title ID, even though they should all be the same
+  get titleId() {
+    return this.ticket.titleId;
+  }
+
+  set titleId(newTitleId: Uint8Array) {
+    console.log('newTitleId=', newTitleId);
+
+    this.ticket.titleId = newTitleId;
+    this.ticket.generateNewTicketId();
+    this.ticket.generateNewTitleKey();
+    // TODO: update ticket signature
+
+    this.titleMetadata.titleId = newTitleId;
+    // TODO: update TMD signature
+
+    this.ncch.titleId = newTitleId;
+    this.ncch.programId = newTitleId;
+    // TODO: update NCCH signature
+  }
+
   // toBlob = (): Blob => {};
 }

@@ -31,8 +31,6 @@ export class CiaNcch {
     return contentSizeInMediaUnits * 0x200;
   }
 
-  // TODO: this needs a setter
-  // TODO: set title ID everywhere at once (ticket, TMD, NCCH)
   // 0x3a08
   get titleId() {
     return new Uint8Array(
@@ -43,8 +41,14 @@ export class CiaNcch {
     ).reverse();
   }
 
-  // TODO: this needs a setter
-  // TODO: update this when we update title ID
+  set titleId(newTitleId: Uint8Array) {
+    // Copy newTitleId and reverse the copy to avoid changing the value we're passed
+    const copyOfNewTitleId = new Uint8Array(newTitleId);
+    copyOfNewTitleId.reverse();
+
+    this.titleId.set(copyOfNewTitleId);
+  }
+
   // 0x3a18
   get programId() {
     return new Uint8Array(
@@ -53,6 +57,14 @@ export class CiaNcch {
       0x8
       // The title ID is backwards here. Go figure
     ).reverse();
+  }
+
+  set programId(newProgramId: Uint8Array) {
+    // Copy newProgramId and reverse the copy to avoid changing the value we're passed
+    const copyOfNewProgramId = new Uint8Array(newProgramId);
+    copyOfNewProgramId.reverse();
+
+    this.programId.set(copyOfNewProgramId);
   }
 
   // TODO: does this need to be changed/be unique?

@@ -38,3 +38,13 @@ const compareUint8Arrays = (
     })
   );
 };
+
+export const randomBytes = (length: number): Uint8Array => {
+  const intArray = new Uint8Array(length);
+
+  for (let i = 0; i < length; i++) {
+    intArray[i] = Math.floor(Math.random() * 0x100);
+  }
+
+  return intArray;
+};

@@ -1,6 +1,7 @@
 import { getSignatureSectionSize, getSignatureSize } from './utils';
 
 // https://www.3dbrew.org/wiki/Title_metadata
+// http://problemkaputt.de/gbatek-3ds-files-title-metadata-tmd.htm
 // Starts at 0x2dc0
 export class CiaTitleMetadata {
   private arrayBuffer: ArrayBuffer;
@@ -39,7 +40,7 @@ export class CiaTitleMetadata {
   }
 
   // TODO: this needs a setter
-  // 0x2fa4
+  // 0x2fa4 (0x1e4 offset in the TMD)
   get infoRecordHash() {
     return new Uint8Array(
       this.arrayBuffer,
@@ -49,7 +50,7 @@ export class CiaTitleMetadata {
   }
 
   // TODO: this needs a setter
-  // 0x2fc8
+  // 0x2fc8 (0x208 offset in the TMD, 0x4 offset in the content info records section)
   get contentChunkHash() {
     return new Uint8Array(
       this.arrayBuffer,
@@ -60,7 +61,7 @@ export class CiaTitleMetadata {
 
   // TODO: this needs a setter
   // TODO: set content size everywhere at once (header, TMD, NCCH)
-  // 0x38cc
+  // 0x38cc (0xb0c offset in the TMD, 0x8 offset in the content chunk records section)
   get contentSize(): bigint {
     const dataView = new DataView(
       this.arrayBuffer,
@@ -72,7 +73,7 @@ export class CiaTitleMetadata {
   }
 
   // TODO: this needs a setter
-  // 0x38d4
+  // 0x38d4 (0xb14 offset in the TMD, 0x10 offset in the content chunk records section)
   get contentHash() {
     return new Uint8Array(
       this.arrayBuffer,

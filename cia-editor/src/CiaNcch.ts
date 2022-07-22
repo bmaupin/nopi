@@ -1,5 +1,6 @@
 // NCCH is sometimes referred to as "content"
 // https://www.3dbrew.org/wiki/NCCH
+// http://problemkaputt.de/gbatek-3ds-files-ncch-format.htm
 // Starts at 0x3900
 export class CiaNcch {
   private arrayBuffer: ArrayBuffer;
@@ -105,7 +106,7 @@ export class CiaNcch {
   }
 
   // TODO: this needs a setter
-  // 0x3ae0
+  // 0x3ae0 (0x1e0 offset in the NCCH)
   get romFsHash() {
     return new Uint8Array(this.arrayBuffer, this.startingByte + 0x1e0, 0x20);
   }

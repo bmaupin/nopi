@@ -1,0 +1,40 @@
+#### Goals
+
+- Header
+  - [ ] Write content size
+- Ticket
+  - [x] Write signature
+  - [x] Write title key
+  - [x] Write ticket ID
+  - [x] Write title ID
+- Title metadata
+  - [x] Write signature
+  - [x] Write title ID
+  - [ ] Write info record hash
+  - [ ] Write content chunk hash
+  - [ ] Write content size
+  - [ ] Write content hash
+- NCCH
+  - [x] Write signature
+  - [ ] Write content size
+  - [x] Write title ID
+  - [x] Write program ID
+  - [ ] Write product code?
+  - [ ] Write RomFS size
+  - [ ] Write RomFS hash
+- ExeFS
+  - [ ] Write file offset?
+  - [ ] Write file size?
+  - [ ] Write file hash
+  - [ ] Write file content
+- RomFS
+  - [ ] Write level 2 size
+  - [ ] Write level 3 size
+  - [ ] Write master hash
+  - [ ] Write level 1 hashes
+  - [ ] Write level 2 hashes
+- RomFS file metadata
+  - [ ] Write file data offset
+  - [ ] Write file data size
+- RomFS file data
+  - [ ] Write content

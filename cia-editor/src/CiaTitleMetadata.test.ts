@@ -24,6 +24,14 @@ describe('title metadata', () => {
     );
   });
 
+  // Regenerate the signature in-place and make sure it doesn't chagne
+  test('generateSignature', () => {
+    testCiaTitleMetadata.generateSignature();
+    expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
+      fromHexString('7A7F734B')
+    );
+  });
+
   test('get titleId', () => {
     expect(testCiaTitleMetadata.titleId).toEqual(
       fromHexString('000400000ff3ff00')

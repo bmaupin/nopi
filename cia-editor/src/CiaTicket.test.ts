@@ -27,7 +27,6 @@ describe('ticket', () => {
   // Regenerate the signature in-place and make sure it doesn't chagne
   test('generateSignature', () => {
     testCiaTicket.generateSignature();
-    // ctrtool only returns the first part of the signature, which should be plenty just to test
     expect(testCiaTicket.signature.slice(0, 4)).toEqual(
       fromHexString('84C81489')
     );

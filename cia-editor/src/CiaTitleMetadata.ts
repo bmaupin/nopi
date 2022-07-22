@@ -1,4 +1,8 @@
-import { getSignatureSectionSize, getSignatureSize } from './utils';
+import {
+  getSignature,
+  getSignatureSectionSize,
+  getSignatureSize,
+} from './utils';
 
 // https://www.3dbrew.org/wiki/Title_metadata
 // http://problemkaputt.de/gbatek-3ds-files-title-metadata-tmd.htm
@@ -8,7 +12,6 @@ export class CiaTitleMetadata {
   private startingByte: number;
 
   private signatureType: Uint8Array;
-  readonly signature: Uint8Array;
 
   constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
     this.arrayBuffer = arrayBuffer;
@@ -16,14 +19,25 @@ export class CiaTitleMetadata {
 
     // 0x2dc0
     this.signatureType = new Uint8Array(arrayBuffer, startingByte, 4);
+  }
 
-    // TODO: this needs a setter
-    // 0x2dc4
-    this.signature = new Uint8Array(
-      arrayBuffer,
-      startingByte + 4,
+  // 0x2dc4
+  get signature() {
+    return new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + 4,
       getSignatureSize(this.signatureType)
     );
+  }
+
+  generateSignature() {
+    const dataToSign = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + getSignatureSectionSize(this.signatureType),
+      0xc4
+    );
+
+    this.signature.set(getSignature(dataToSign));
   }
 
   // 0x2f4c

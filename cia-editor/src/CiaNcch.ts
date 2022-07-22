@@ -1,3 +1,5 @@
+import { getSignature } from './utils';
+
 // NCCH is sometimes referred to as "content"
 // https://www.3dbrew.org/wiki/NCCH
 // http://problemkaputt.de/gbatek-3ds-files-ncch-format.htm
@@ -11,10 +13,19 @@ export class CiaNcch {
     this.startingByte = startingByte;
   }
 
-  // TODO: this needs a setter
   // 0x3900
   get signature() {
     return new Uint8Array(this.arrayBuffer, this.startingByte, 0x100);
+  }
+
+  generateSignature() {
+    const dataToSign = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + 0x100,
+      0x100
+    );
+
+    this.signature.set(getSignature(dataToSign));
   }
 
   // TODO: this needs a setter

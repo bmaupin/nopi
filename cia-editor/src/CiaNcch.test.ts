@@ -26,6 +26,16 @@ describe('NCCH', () => {
     );
   });
 
+  // Regenerate the signature in-place and make sure it doesn't chagne
+  test('generateSignature', () => {
+    testCiaNcch.generateSignature();
+    expect(testCiaNcch.signature.slice(0, 32)).toEqual(
+      fromHexString(
+        '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
+      )
+    );
+  });
+
   test('get contentSize', () => {
     expect(testCiaNcch.contentSize).toEqual(0x0000c000);
   });

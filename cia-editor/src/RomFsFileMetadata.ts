@@ -26,13 +26,15 @@ export class RomFsFileMetadata {
   }
 
   // TODO: this needs a setter
+  // This represents the offset of the file data in the file data section
   get fileDataOffset() {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x8,
-      0x8
+      // This and fileDataSize are technically 64-bit values; see note in CiaRomFs.ts for more information
+      0x4
     );
-    return dataView.getBigUint64(0, true);
+    return dataView.getUint32(0, true);
   }
 
   // TODO: this needs a setter
@@ -40,9 +42,9 @@ export class RomFsFileMetadata {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x10,
-      0x8
+      0x4
     );
-    return dataView.getBigUint64(0, true);
+    return dataView.getUint32(0, true);
   }
 
   get fileNameLength() {

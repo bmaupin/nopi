@@ -163,6 +163,8 @@ export class CiaRomFs {
     return dataView.getUint32(0, true);
   }
 
+  // This is the offset of the file data from the start of the level 3 section,
+  // which starts at offset 0x1000 in the RomFS
   // test.cia: 0xc924
   // retroarch cia: 0x4a0924
   get fileDataOffset() {
@@ -185,7 +187,11 @@ export class CiaRomFs {
     let currentFile: RomFsFile;
 
     while (currentByte < fileTableStartingByte + this.fileTableLength) {
-      currentFile = new RomFsFile(this.arrayBuffer, currentByte);
+      currentFile = new RomFsFile(
+        this.arrayBuffer,
+        currentByte,
+        this.startingByte + CiaRomFs.LEVEL_3_OFFSET + this.fileDataOffset
+      );
       currentFiles.push(currentFile);
       currentByte += currentFile.metadataSize;
     }

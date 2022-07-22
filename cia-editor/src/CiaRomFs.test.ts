@@ -72,6 +72,10 @@ describe('RomFS', () => {
   test('get files', () => {
     expect(testCiaRomFs.files.length).toBe(1);
     expect(testCiaRomFs.files[0].name).toEqual('test.txt');
+    expect(testCiaRomFs.files[0].content).toEqual(
+      // This represents "test\n"
+      new Uint8Array([0x74, 0x65, 0x73, 0x74, 0x0a])
+    );
   });
 
   // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xd900 0xd920

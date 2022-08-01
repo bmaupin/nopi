@@ -45,13 +45,25 @@ describe('CiaFile', () => {
     expect(testCiaFile.ticket.titleKey).not.toEqual(
       fromHexString('3A9F60D1AB3FFEA3B00816EB7B7CEB7E')
     );
+    expect(testCiaFile.ticket.signature.slice(0, 4)).not.toEqual(
+      fromHexString('84C81489')
+    );
 
     expect(testCiaFile.titleMetadata.titleId).toEqual(
       fromHexString('000400009f07c400')
     );
+    expect(testCiaFile.titleMetadata.signature.slice(0, 4)).not.toEqual(
+      fromHexString('7A7F734B')
+    );
+
     expect(testCiaFile.ncch.titleId).toEqual(fromHexString('000400009f07c400'));
     expect(testCiaFile.ncch.programId).toEqual(
       fromHexString('000400009f07c400')
+    );
+    expect(testCiaFile.ncch.signature.slice(0, 32)).not.toEqual(
+      fromHexString(
+        '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
+      )
     );
   });
 });

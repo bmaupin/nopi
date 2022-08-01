@@ -65,19 +65,17 @@ export class CiaFile {
   }
 
   set titleId(newTitleId: Uint8Array) {
-    console.log('newTitleId=', newTitleId);
-
     this.ticket.titleId = newTitleId;
     this.ticket.generateNewTicketId();
     this.ticket.generateNewTitleKey();
-    // TODO: update ticket signature
+    this.ticket.updateSignature();
 
     this.titleMetadata.titleId = newTitleId;
-    // TODO: update TMD signature
+    this.titleMetadata.updateSignature();
 
     this.ncch.titleId = newTitleId;
     this.ncch.programId = newTitleId;
-    // TODO: update NCCH signature
+    this.ncch.updateSignature();
   }
 
   // toBlob = (): Blob => {};

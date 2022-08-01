@@ -8,11 +8,10 @@ import {
 // https://www.3dbrew.org/wiki/Ticket
 // Starts at 0x2a40
 export class CiaTicket {
-  private arrayBuffer: ArrayBuffer;
-  private startingByte: number;
-
   private static readonly TICKET_DATA_SIZE = 0x210;
 
+  private arrayBuffer: ArrayBuffer;
+  private startingByte: number;
   private signatureType: Uint8Array;
 
   constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
@@ -31,7 +30,7 @@ export class CiaTicket {
     );
   }
 
-  generateSignature() {
+  updateSignature() {
     const dataToSign = new Uint8Array(
       this.arrayBuffer,
       this.startingByte + getSignatureSectionSize(this.signatureType),

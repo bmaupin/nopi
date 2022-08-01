@@ -18,7 +18,7 @@ export class CiaNcch {
     return new Uint8Array(this.arrayBuffer, this.startingByte, 0x100);
   }
 
-  generateSignature() {
+  updateSignature() {
     const dataToSign = new Uint8Array(
       this.arrayBuffer,
       this.startingByte + 0x100,

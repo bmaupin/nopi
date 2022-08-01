@@ -25,8 +25,8 @@ describe('ticket', () => {
   });
 
   // Regenerate the signature in-place and make sure it doesn't chagne
-  test('generateSignature', () => {
-    testCiaTicket.generateSignature();
+  test('updateSignature', () => {
+    testCiaTicket.updateSignature();
     expect(testCiaTicket.signature.slice(0, 4)).toEqual(
       fromHexString('84C81489')
     );

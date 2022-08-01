@@ -30,7 +30,7 @@ export class CiaTitleMetadata {
     );
   }
 
-  generateSignature() {
+  updateSignature() {
     const dataToSign = new Uint8Array(
       this.arrayBuffer,
       this.startingByte + getSignatureSectionSize(this.signatureType),

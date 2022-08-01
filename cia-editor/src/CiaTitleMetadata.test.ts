@@ -25,8 +25,8 @@ describe('title metadata', () => {
   });
 
   // Regenerate the signature in-place and make sure it doesn't chagne
-  test('generateSignature', () => {
-    testCiaTitleMetadata.generateSignature();
+  test('updateSignature', () => {
+    testCiaTitleMetadata.updateSignature();
     expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
       fromHexString('7A7F734B')
     );

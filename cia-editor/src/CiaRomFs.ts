@@ -62,7 +62,7 @@ export class CiaRomFs {
   }
 
   // TODO: this needs a setter
-  // Size of level 2 (before padding to block size)
+  // Size of level 2 content in bytes (before padding to block size)
   // test.cia: 0xb92c
   // retroarch cia: 0x49f92c
   get level2Size() {
@@ -75,7 +75,7 @@ export class CiaRomFs {
   }
 
   // TODO: this needs a setter
-  // Size of level 3 (before padding to block size)
+  // Size of level 3 content in bytes (before padding to block size)
   // test.cia: 0xb944
   // retroarch cia: 0x49f944
   get level3Size() {
@@ -269,19 +269,25 @@ export class CiaRomFs {
     return hashes;
   }
 
+  updateLevel1Hashes = (): void => {
+    for (
+      let currentByte = this.level2HashesStartingByte, i = 0;
+      currentByte < this.level2HashesStartingByte + this.level2Size;
+      currentByte += 0x1000, i++
+    ) {
+      const dataToHash = new Uint8Array(this.arrayBuffer, currentByte, 0x1000);
+      this.level1Hashes[i].set(getHash(dataToHash));
+    }
+  };
+
   // Level 2 contains hashes for each 0x1000 block of level 3
   // test.cia: 0xe900
   get level2Hashes() {
-    const level2HashesStartingByte =
-      this.startingByte +
-      CiaRomFs.LEVEL_3_OFFSET +
-      calculateAlignedSize(this.level3Size, this.level3BlockSize) +
-      calculateAlignedSize(this.level1Size, this.level1BlockSize);
     const hashes: Uint8Array[] = [];
 
     for (
-      let currentByte = level2HashesStartingByte;
-      currentByte < level2HashesStartingByte + this.level1Size;
+      let currentByte = this.level2HashesStartingByte;
+      currentByte < this.level2HashesStartingByte + this.level1Size;
       currentByte += 0x20
     ) {
       const hash = new Uint8Array(this.arrayBuffer, currentByte, 0x20);
@@ -289,6 +295,15 @@ export class CiaRomFs {
     }
 
     return hashes;
+  }
+
+  private get level2HashesStartingByte() {
+    return (
+      this.startingByte +
+      CiaRomFs.LEVEL_3_OFFSET +
+      calculateAlignedSize(this.level3Size, this.level3BlockSize) +
+      calculateAlignedSize(this.level1Size, this.level1BlockSize)
+    );
   }
 
   updateLevel2Hashes = (): void => {
@@ -306,7 +321,7 @@ export class CiaRomFs {
 
   update = (): void => {
     this.updateLevel2Hashes();
-    // TODO: update level 1 hashes
+    this.updateLevel1Hashes();
     // TODO: update master hash
     // TODO: call NCCH update method
   };

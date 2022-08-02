@@ -7,6 +7,8 @@ import { CiaRomFs } from './CiaRomFs';
 
 // This represents "test\n"
 const TEST_TXT_CONTENT = new Uint8Array([0x74, 0x65, 0x73, 0x74, 0x0a]);
+// This represents "nopi\n"
+const TEST_TXT_NEW_CONTENT = new Uint8Array([0x6e, 0x6f, 0x70, 0x69, 0x0a]);
 
 let testCiaRomFs: CiaRomFs;
 
@@ -78,10 +80,22 @@ describe('RomFS', () => {
     expect(testCiaRomFs.files[0].content).toEqual(TEST_TXT_CONTENT);
   });
 
-  // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xd900 0xd920
-  test('get level1Hashes', () => {
+  test('level1Hashes', () => {
+    testCiaRomFs.files[0].content = TEST_TXT_CONTENT;
     expect(testCiaRomFs.level1Hashes.length).toBe(1);
     expect(testCiaRomFs.level1Hashes[0]).toEqual(
+      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xd900 0xd920
+      new Uint8Array([
+        0x59, 0xf8, 0xa2, 0x29, 0x1d, 0xe0, 0xb8, 0xe4, 0xf6, 0xb7, 0xc4, 0x53,
+        0x11, 0x03, 0x3d, 0xf9, 0x06, 0xd6, 0xd2, 0x1a, 0x17, 0x83, 0x02, 0x0a,
+        0x8c, 0xe9, 0x6c, 0x64, 0x33, 0x5d, 0xf7, 0xd7,
+      ])
+    );
+
+    // Change the RomFS file content and make sure the hash changes
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
+    expect(testCiaRomFs.level1Hashes.length).toBe(1);
+    expect(testCiaRomFs.level1Hashes[0]).not.toEqual(
       new Uint8Array([
         0x59, 0xf8, 0xa2, 0x29, 0x1d, 0xe0, 0xb8, 0xe4, 0xf6, 0xb7, 0xc4, 0x53,
         0x11, 0x03, 0x3d, 0xf9, 0x06, 0xd6, 0xd2, 0x1a, 0x17, 0x83, 0x02, 0x0a,
@@ -93,8 +107,8 @@ describe('RomFS', () => {
   test('level2Hashes', () => {
     testCiaRomFs.files[0].content = TEST_TXT_CONTENT;
     expect(testCiaRomFs.level2Hashes.length).toBe(1);
-    // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xe900 0xe920
     expect(testCiaRomFs.level2Hashes[0]).toEqual(
+      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xe900 0xe920
       new Uint8Array([
         0xa7, 0xf4, 0xf8, 0xd9, 0x05, 0x6c, 0x66, 0xd5, 0x5e, 0x71, 0x83, 0x30,
         0x37, 0xac, 0xe1, 0xd9, 0x9c, 0x90, 0xed, 0xeb, 0xc9, 0xb2, 0xbf, 0x8b,
@@ -103,9 +117,7 @@ describe('RomFS', () => {
     );
 
     // Change the RomFS file content and make sure the hash changes
-    testCiaRomFs.files[0].content = new Uint8Array([
-      0x6e, 0x6f, 0x70, 0x69, 0x0a,
-    ]);
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
     expect(testCiaRomFs.level2Hashes.length).toBe(1);
     expect(testCiaRomFs.level2Hashes[0]).not.toEqual(
       new Uint8Array([

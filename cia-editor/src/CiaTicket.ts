@@ -30,7 +30,7 @@ export class CiaTicket {
     );
   }
 
-  updateSignature() {
+  updateSignature = () => {
     const dataToSign = new Uint8Array(
       this.arrayBuffer,
       this.startingByte + getSignatureSectionSize(this.signatureType),
@@ -38,7 +38,7 @@ export class CiaTicket {
     );
 
     this.signature.set(getSignature(dataToSign));
-  }
+  };
 
   // 0x2bff
   get titleKey() {
@@ -51,9 +51,9 @@ export class CiaTicket {
 
   // It seems that the title key can be random
   // https://github.com/3DSGuy/Project_CTR/blob/319c4c6a24747a6def3c012312ed13a2f76bb369/makerom/cia.c#L188
-  generateNewTitleKey() {
+  generateNewTitleKey = () => {
     this.titleKey.set(new Uint8Array(randomBytes(0x10)));
-  }
+  };
 
   // 0x2c10
   get ticketId() {
@@ -66,9 +66,9 @@ export class CiaTicket {
 
   // Ticket ID always seems to be random
   // https://github.com/3DSGuy/Project_CTR/blob/319c4c6a24747a6def3c012312ed13a2f76bb369/makerom/cia.c#L179
-  generateNewTicketId() {
+  generateNewTicketId = () => {
     this.ticketId.set(new Uint8Array([0x00, 0x04, ...randomBytes(6)]));
-  }
+  };
 
   // 0x2c1c
   get titleId() {

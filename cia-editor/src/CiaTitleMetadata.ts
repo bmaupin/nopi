@@ -30,7 +30,7 @@ export class CiaTitleMetadata {
     );
   }
 
-  updateSignature() {
+  updateSignature = () => {
     const dataToSign = new Uint8Array(
       this.arrayBuffer,
       this.startingByte + getSignatureSectionSize(this.signatureType),
@@ -38,7 +38,7 @@ export class CiaTitleMetadata {
     );
 
     this.signature.set(getSignature(dataToSign));
-  }
+  };
 
   // 0x2f4c
   get titleId() {

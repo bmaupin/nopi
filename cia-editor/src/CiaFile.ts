@@ -54,9 +54,9 @@ export class CiaFile {
     this.romFs = new CiaRomFs(this.arrayBuffer, romFsStartingByte);
   }
 
-  public static async fromBlob(blob: Blob): Promise<CiaFile> {
+  public static fromBlob = async (blob: Blob): Promise<CiaFile> => {
     return new CiaFile(await blob.arrayBuffer());
-  }
+  };
 
   // The title ID occurs at different points in the CIA file; we'll consider the one in
   // the ticket to be the authoritative title ID, even though they should all be the same

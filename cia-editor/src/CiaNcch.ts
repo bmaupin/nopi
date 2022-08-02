@@ -18,7 +18,7 @@ export class CiaNcch {
     return new Uint8Array(this.arrayBuffer, this.startingByte, 0x100);
   }
 
-  updateSignature() {
+  updateSignature = () => {
     const dataToSign = new Uint8Array(
       this.arrayBuffer,
       this.startingByte + 0x100,
@@ -26,7 +26,7 @@ export class CiaNcch {
     );
 
     this.signature.set(getSignature(dataToSign));
-  }
+  };
 
   // TODO: this needs a setter
   // TODO: set content size everywhere at once (header, TMD, NCCH)

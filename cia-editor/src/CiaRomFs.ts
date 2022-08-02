@@ -2,7 +2,7 @@
 // http://problemkaputt.de/gbatek-3ds-files-ncch-romfs.htm
 
 import { RomFsFile } from './RomFsFile';
-import { calculateAlignedSize } from './utils';
+import { calculateAlignedSize, getHash } from './utils';
 
 // first 0x5c bytes are the header
 export class CiaRomFs {
@@ -100,7 +100,7 @@ export class CiaRomFs {
   }
 
   // TODO: this needs a setter
-  // 0xb960
+  // test.cia: 0xb960
   // retroarch cia: 0x49f960
   get masterHash() {
     return new Uint8Array(
@@ -143,6 +143,7 @@ export class CiaRomFs {
   */
 
   // Offset of the file metadata table inside the level 3 section
+  // test.cia: 0xc91c
   // retroarch cia: 0x4a091c
   get fileTableOffset() {
     const dataView = new DataView(
@@ -190,7 +191,8 @@ export class CiaRomFs {
       currentFile = new RomFsFile(
         this.arrayBuffer,
         currentByte,
-        this.startingByte + CiaRomFs.LEVEL_3_OFFSET + this.fileDataOffset
+        this.startingByte + CiaRomFs.LEVEL_3_OFFSET + this.fileDataOffset,
+        this.update
       );
       currentFiles.push(currentFile);
       currentByte += currentFile.metadataSize;
@@ -247,6 +249,7 @@ export class CiaRomFs {
    */
 
   // Level 1 contains hashes for each 0x1000 block of level 2
+  // test.cia: 0xd900
   get level1Hashes() {
     const level1HashesStartingByte =
       this.startingByte +
@@ -267,6 +270,7 @@ export class CiaRomFs {
   }
 
   // Level 2 contains hashes for each 0x1000 block of level 3
+  // test.cia: 0xe900
   get level2Hashes() {
     const level2HashesStartingByte =
       this.startingByte +
@@ -275,15 +279,35 @@ export class CiaRomFs {
       calculateAlignedSize(this.level1Size, this.level1BlockSize);
     const hashes: Uint8Array[] = [];
 
-    let currentByte = level2HashesStartingByte;
-
-    while (currentByte < level2HashesStartingByte + this.level1Size) {
+    for (
+      let currentByte = level2HashesStartingByte;
+      currentByte < level2HashesStartingByte + this.level1Size;
+      currentByte += 0x20
+    ) {
       const hash = new Uint8Array(this.arrayBuffer, currentByte, 0x20);
       hashes.push(hash);
-
-      currentByte += 0x20;
     }
 
     return hashes;
   }
+
+  updateLevel2Hashes = (): void => {
+    const level3StartingByte = this.startingByte + CiaRomFs.LEVEL_3_OFFSET;
+
+    for (
+      let currentByte = level3StartingByte, i = 0;
+      currentByte < level3StartingByte + this.level3Size;
+      currentByte += 0x1000, i++
+    ) {
+      const dataToHash = new Uint8Array(this.arrayBuffer, currentByte, 0x1000);
+      this.level2Hashes[i].set(getHash(dataToHash));
+    }
+  };
+
+  update = (): void => {
+    this.updateLevel2Hashes();
+    // TODO: update level 1 hashes
+    // TODO: update master hash
+    // TODO: call NCCH update method
+  };
 }

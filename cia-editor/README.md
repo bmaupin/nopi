@@ -32,9 +32,9 @@
   - [ ] Write level 3 size
   - [ ] Write master hash
   - [ ] Write level 1 hashes
-  - [ ] Write level 2 hashes
+  - [x] Write level 2 hashes
 - RomFS file metadata
   - [ ] Write file data offset
   - [ ] Write file data size
 - RomFS file data
-  - [ ] Write content
+  - [x] Write content

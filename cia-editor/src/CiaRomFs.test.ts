@@ -5,6 +5,9 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { CiaFile } from './CiaFile';
 import { CiaRomFs } from './CiaRomFs';
 
+// This represents "test\n"
+const TEST_TXT_CONTENT = new Uint8Array([0x74, 0x65, 0x73, 0x74, 0x0a]);
+
 let testCiaRomFs: CiaRomFs;
 
 beforeAll(async () => {
@@ -72,10 +75,7 @@ describe('RomFS', () => {
   test('get files', () => {
     expect(testCiaRomFs.files.length).toBe(1);
     expect(testCiaRomFs.files[0].name).toEqual('test.txt');
-    expect(testCiaRomFs.files[0].content).toEqual(
-      // This represents "test\n"
-      new Uint8Array([0x74, 0x65, 0x73, 0x74, 0x0a])
-    );
+    expect(testCiaRomFs.files[0].content).toEqual(TEST_TXT_CONTENT);
   });
 
   // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xd900 0xd920
@@ -90,10 +90,24 @@ describe('RomFS', () => {
     );
   });
 
-  // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xe900 0xe920
-  test('get level2Hashes', () => {
+  test('level2Hashes', () => {
+    testCiaRomFs.files[0].content = TEST_TXT_CONTENT;
     expect(testCiaRomFs.level2Hashes.length).toBe(1);
+    // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xe900 0xe920
     expect(testCiaRomFs.level2Hashes[0]).toEqual(
+      new Uint8Array([
+        0xa7, 0xf4, 0xf8, 0xd9, 0x05, 0x6c, 0x66, 0xd5, 0x5e, 0x71, 0x83, 0x30,
+        0x37, 0xac, 0xe1, 0xd9, 0x9c, 0x90, 0xed, 0xeb, 0xc9, 0xb2, 0xbf, 0x8b,
+        0xa8, 0x5a, 0x0e, 0xfd, 0x46, 0x9d, 0xe0, 0xf6,
+      ])
+    );
+
+    // Change the RomFS file content and make sure the hash changes
+    testCiaRomFs.files[0].content = new Uint8Array([
+      0x6e, 0x6f, 0x70, 0x69, 0x0a,
+    ]);
+    expect(testCiaRomFs.level2Hashes.length).toBe(1);
+    expect(testCiaRomFs.level2Hashes[0]).not.toEqual(
       new Uint8Array([
         0xa7, 0xf4, 0xf8, 0xd9, 0x05, 0x6c, 0x66, 0xd5, 0x5e, 0x71, 0x83, 0x30,
         0x37, 0xac, 0xe1, 0xd9, 0x9c, 0x90, 0xed, 0xeb, 0xc9, 0xb2, 0xbf, 0x8b,

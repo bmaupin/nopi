@@ -9,7 +9,17 @@ export const calculateAlignedSize = (
   return length + (alignment - (length % alignment || alignment));
 };
 
-export const getSignature = (dataToSign: Uint8Array) => {
+// Generates a SHA256 hash of the provided data and returns the hash
+export const getHash = (dataToHash: Uint8Array): Uint8Array => {
+  const messageDigest = forge.md.sha256.create();
+  const buffer = String.fromCharCode.apply(null, dataToHash);
+  messageDigest.update(buffer);
+
+  return Buffer.from(messageDigest.digest().data, 'ascii');
+};
+
+// Signs the provided data and returns the signature
+export const getSignature = (dataToSign: Uint8Array): Uint8Array => {
   // The modulus is also in the NCCH extended header at offset 0x700 (0x4000 in the CIA
   // file), but we'll define it here just to make sure it's the one that matches the
   // public/private exponents

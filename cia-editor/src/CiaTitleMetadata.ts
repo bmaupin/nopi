@@ -65,7 +65,30 @@ export class CiaTitleMetadata {
     );
   }
 
-  // TODO: this needs a setter
+  // *** Content info records ***
+
+  private get contentIndexOffset() {
+    const dataView = new DataView(
+      this.arrayBuffer,
+      this.startingByte + getSignatureSectionSize(this.signatureType) + 0xc4,
+      0x2
+    );
+    // big endian
+    return dataView.getUint16(0, false);
+  }
+
+  private get contentCommandCount() {
+    const dataView = new DataView(
+      this.arrayBuffer,
+      this.startingByte + getSignatureSectionSize(this.signatureType) + 0xc6,
+      0x2
+    );
+    // big endian
+    return dataView.getUint16(0, false);
+  }
+
+  // Hash of all of the content chunks
+  // Number of content chunks seems to be determined by contentCommandCount?
   // 0x2fc8 (0x208 offset in the TMD, 0x4 offset in the content info records section)
   get contentChunkHash() {
     return new Uint8Array(
@@ -74,6 +97,23 @@ export class CiaTitleMetadata {
       0x20
     );
   }
+
+  // The content chunk hash must be updated if contentHash changes
+  updateContentChunkHash = () => {
+    const dataToHash = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte +
+        getSignatureSectionSize(this.signatureType) +
+        0x9c4 +
+        this.contentIndexOffset,
+      // this.contentCommandCount content chunk records, 0x30 bytes each
+      0x30 * this.contentCommandCount
+    );
+
+    this.contentChunkHash.set(getHash(dataToHash));
+  };
+
+  // *** Content chunk records ***
 
   // TODO: this needs a setter
   // TODO: set content size everywhere at once (header, TMD, NCCH)
@@ -109,6 +149,7 @@ export class CiaTitleMetadata {
     );
 
     this.contentHash.set(getHash(dataToHash));
+    this.updateContentChunkHash();
   };
 
   get size() {

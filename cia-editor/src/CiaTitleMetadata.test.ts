@@ -56,8 +56,20 @@ describe('title metadata', () => {
     );
   });
 
-  // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0x2fc8 0x2fe8
-  test('get contentChunkHash', () => {
+  test('contentChunkHash', () => {
+    // Change the RomFS file content and make sure the hash changes
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
+    expect(testCiaTitleMetadata.contentChunkHash).not.toEqual(
+      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0x2fc8 0x2fe8
+      new Uint8Array([
+        0xb4, 0x78, 0x88, 0x9f, 0xdb, 0x8a, 0x50, 0xe0, 0xc3, 0xb1, 0x46, 0xa5,
+        0x9a, 0xae, 0xc3, 0x43, 0x64, 0x62, 0x51, 0xc5, 0x37, 0xd3, 0x43, 0xe8,
+        0x12, 0x7d, 0x74, 0x53, 0x91, 0x8e, 0x5e, 0x51,
+      ])
+    );
+
+    // Reset the content and check the hash again
+    testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaTitleMetadata.contentChunkHash).toEqual(
       new Uint8Array([
         0xb4, 0x78, 0x88, 0x9f, 0xdb, 0x8a, 0x50, 0xe0, 0xc3, 0xb1, 0x46, 0xa5,

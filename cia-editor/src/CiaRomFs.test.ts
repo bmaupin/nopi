@@ -28,7 +28,7 @@ describe('RomFS', () => {
   });
 
   test('get masterHashSize', () => {
-    expect(testCiaRomFs.masterHashSize).toBe(0x20);
+    expect(testCiaRomFs.masterHashesSize).toBe(0x20);
   });
 
   test('get level1Size', () => {
@@ -51,9 +51,10 @@ describe('RomFS', () => {
     expect(testCiaRomFs.level3BlockSize).toBe(0x1000);
   });
 
-  // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xb960 0xb980
-  test('get masterHash', () => {
-    expect(testCiaRomFs.masterHash).toEqual(
+  test('masterHashes', () => {
+    expect(testCiaRomFs.masterHashes.length).toBe(1);
+    expect(testCiaRomFs.masterHashes[0]).toEqual(
+      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xb960 0xb980
       new Uint8Array([
         0x34, 0x25, 0x1f, 0x69, 0xf7, 0xed, 0x8c, 0x4c, 0x40, 0x72, 0x59, 0x35,
         0xb6, 0xf9, 0x68, 0x39, 0xdd, 0xec, 0x56, 0x5c, 0x7d, 0x3a, 0xd5, 0xb5,

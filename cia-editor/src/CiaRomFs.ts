@@ -24,7 +24,7 @@ export class CiaRomFs {
 
   // test.cia: 0xb908
   // retroarch cia: 0x49f908
-  get masterHashSize() {
+  get masterHashesSize() {
     const dataView = new DataView(
       this.arrayBuffer,
       this.startingByte + 0x8,
@@ -99,15 +99,28 @@ export class CiaRomFs {
     return Math.pow(2, level3BlockSizeLog2);
   }
 
-  // TODO: this needs a setter
+  // The master hashes contains hashes for each 0x1000 block of level 1
+  // - Each 0x20 hash represents up to 64 MB of data in level 3 (RomFS)
+  //   - Each 0x20 block in level 2 is a hash of each 0x1000 block in level 3
+  //     - So 0x1000 blocks of level 2 would represent (0x1000 * (0x1000 / 0x20)) = 512 KB in level 3 (RomFS)
+  //   - Each 0x20 block in level 1 is a hash of each 0x1000 block in level 2
+  //     - So 0x1000 blocks of level 1 would represent (0x1000 * ((0x1000 / 0x20) * (0x1000 / 0x20))) = 64 MB of data in RomFS
   // test.cia: 0xb960
   // retroarch cia: 0x49f960
-  get masterHash() {
-    return new Uint8Array(
-      this.arrayBuffer,
-      this.startingByte + 0x60,
-      this.masterHashSize
-    );
+  get masterHashes() {
+    const masterHashesStartingByte = this.startingByte + 0x60;
+    const hashes: Uint8Array[] = [];
+
+    for (
+      let currentByte = masterHashesStartingByte;
+      currentByte < masterHashesStartingByte + this.masterHashesSize;
+      currentByte += 0x20
+    ) {
+      const hash = new Uint8Array(this.arrayBuffer, currentByte, 0x20);
+      hashes.push(hash);
+    }
+
+    return hashes;
   }
 
   // TODO: clean this up
@@ -257,13 +270,13 @@ export class CiaRomFs {
       calculateAlignedSize(this.level3Size, this.level3BlockSize);
     const hashes: Uint8Array[] = [];
 
-    let currentByte = level1HashesStartingByte;
-
-    while (currentByte < level1HashesStartingByte + this.level1Size) {
+    for (
+      let currentByte = level1HashesStartingByte;
+      currentByte < level1HashesStartingByte + this.level1Size;
+      currentByte += 0x20
+    ) {
       const hash = new Uint8Array(this.arrayBuffer, currentByte, 0x20);
       hashes.push(hash);
-
-      currentByte += 0x20;
     }
 
     return hashes;

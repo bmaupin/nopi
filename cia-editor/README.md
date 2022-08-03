@@ -10,7 +10,7 @@
 - Title metadata
   - [x] Write signature
   - [x] Write title ID
-  - [ ] Write info record hash
+  - [x] Write info record hash
   - [x] Write content chunk hash
   - [ ] Write content size
   - [x] Write content hash

@@ -66,7 +66,7 @@ export class RomFsFile {
       - [x] NCCH signature needs to be updated to reflect changed NCCH header contents
       - [x] Title metadata contentHash needs to be updated
       - [x] Title metadata contentChunkHash needs to be updated
-      - [ ] Title metadata infoRecordHash
+      - [x] Title metadata infoRecordHash
       - [ ] Title metadata signature
 
       If the size of the content changes, here's what needs to be updated (in addition to the above):

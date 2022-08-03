@@ -45,8 +45,20 @@ describe('title metadata', () => {
     );
   });
 
-  // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0x2fa4 0x2fc4
-  test('get infoRecordHash', () => {
+  test('infoRecordHash', () => {
+    // Change the RomFS file content and make sure the hash changes
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
+    expect(testCiaTitleMetadata.infoRecordHash).not.toEqual(
+      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0x2fa4 0x2fc4
+      new Uint8Array([
+        0x0e, 0xb2, 0x23, 0x23, 0x2c, 0xb0, 0x8d, 0x2f, 0x5f, 0x6a, 0x73, 0x6a,
+        0x76, 0x7f, 0x0c, 0x50, 0x03, 0x17, 0x8b, 0xca, 0xc6, 0x8f, 0x1b, 0xb0,
+        0xbf, 0xd1, 0x05, 0x00, 0x8a, 0x23, 0x47, 0x32,
+      ])
+    );
+
+    // Reset the content and check the hash again
+    testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaTitleMetadata.infoRecordHash).toEqual(
       new Uint8Array([
         0x0e, 0xb2, 0x23, 0x23, 0x2c, 0xb0, 0x8d, 0x2f, 0x5f, 0x6a, 0x73, 0x6a,

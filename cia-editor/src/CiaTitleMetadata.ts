@@ -55,7 +55,7 @@ export class CiaTitleMetadata {
     this.titleId.set(newTitleId);
   }
 
-  // TODO: this needs a setter
+  // This is a hash of all of the info records
   // 0x2fa4 (0x1e4 offset in the TMD)
   get infoRecordHash() {
     return new Uint8Array(
@@ -63,6 +63,18 @@ export class CiaTitleMetadata {
       this.startingByte + getSignatureSectionSize(this.signatureType) + 0xa4,
       0x20
     );
+  }
+
+  // The info record hash must be updated if the contentChunkHash changes
+  updateInfoRecordHash() {
+    const dataToHash = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + getSignatureSectionSize(this.signatureType) + 0xc4,
+      // 64 info records, 0x24 bytes each
+      0x24 * 64
+    );
+
+    this.infoRecordHash.set(getHash(dataToHash));
   }
 
   // *** Content info records ***
@@ -111,6 +123,7 @@ export class CiaTitleMetadata {
     );
 
     this.contentChunkHash.set(getHash(dataToHash));
+    this.updateInfoRecordHash();
   };
 
   // *** Content chunk records ***

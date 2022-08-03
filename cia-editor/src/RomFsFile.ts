@@ -1,9 +1,10 @@
+import { CiaRomFs } from './CiaRomFs';
 import { RomFsFileMetadata } from './RomFsFileMetadata';
 
 export class RomFsFile {
   private arrayBuffer: ArrayBuffer;
   private fileDataStartingByte: number;
-  private updateRomFs: () => void;
+  private romFs: CiaRomFs;
 
   readonly metadata: RomFsFileMetadata;
   readonly metadataSize: number;
@@ -14,14 +15,11 @@ export class RomFsFile {
     arrayBuffer: ArrayBuffer,
     metadataStartingByte: number,
     fileDataStartingByte: number,
-    // TODO: this is basically an observer pattern hack; should we use the observer pattern?
-    // We could use an abstract class or parent class for the Subject so it could include
-    // the implementationand then just use an interface for Observer
-    updateRomFs: () => void
+    romFs: CiaRomFs
   ) {
     this.arrayBuffer = arrayBuffer;
     this.fileDataStartingByte = fileDataStartingByte;
-    this.updateRomFs = updateRomFs;
+    this.romFs = romFs;
 
     this.metadata = new RomFsFileMetadata(arrayBuffer, metadataStartingByte);
     this.metadataSize = this.metadata.size;
@@ -55,7 +53,7 @@ export class RomFsFile {
 
   set content(newValue: ArrayLike<number>) {
     this._content.set(newValue);
-    this.updateRomFs();
+    this.romFs.updateLevel2Hashes();
   }
 
   /* TODO: development notes; clean up

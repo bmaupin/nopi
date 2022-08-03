@@ -137,6 +137,8 @@ export class CiaRomFs {
       const dataToHash = new Uint8Array(this.arrayBuffer, currentByte, 0x1000);
       this.masterHashes[i].set(getHash(dataToHash));
     }
+
+    this.ncch.updateRomFsHash();
   };
 
   // *** RomFS level 3 ***
@@ -223,7 +225,7 @@ export class CiaRomFs {
         this.arrayBuffer,
         currentByte,
         this.startingByte + CiaRomFs.LEVEL_3_OFFSET + this.fileDataOffset,
-        this.update
+        this
       );
       currentFiles.push(currentFile);
       currentByte += currentFile.metadataSize;
@@ -315,6 +317,8 @@ export class CiaRomFs {
       const dataToHash = new Uint8Array(this.arrayBuffer, currentByte, 0x1000);
       this.level1Hashes[i].set(getHash(dataToHash));
     }
+
+    this.updateMasterHashes();
   };
 
   // *** RomFS level 2 ***
@@ -356,16 +360,7 @@ export class CiaRomFs {
       const dataToHash = new Uint8Array(this.arrayBuffer, currentByte, 0x1000);
       this.level2Hashes[i].set(getHash(dataToHash));
     }
-  };
 
-  // TODO: what's the best way to handle this?
-  // - we could just pass this class to RomFsFile and have it call these methods directly
-  // - or have updateLevel2Hashes then call updateLevel1Hashes, and so on
-  // - or use a proper Observer pattern
-  update = (): void => {
-    this.updateLevel2Hashes();
     this.updateLevel1Hashes();
-    this.updateMasterHashes();
-    this.ncch.updateRomFsHash();
   };
 }

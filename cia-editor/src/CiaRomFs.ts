@@ -33,7 +33,7 @@ export class CiaRomFs {
     return dataView.getUint32(0, true);
   }
 
-  // Size of level 1 (before padding to block size)
+  // Size of level 1 content in bytes (before padding to block size)
   // test.cia: 0xb914
   // retroarch cia: 0x49f914
   get level1Size() {
@@ -122,6 +122,17 @@ export class CiaRomFs {
 
     return hashes;
   }
+
+  updateMasterHashes = (): void => {
+    for (
+      let currentByte = this.level1HashesStartingByte, i = 0;
+      currentByte < this.level1HashesStartingByte + this.level1Size;
+      currentByte += 0x1000, i++
+    ) {
+      const dataToHash = new Uint8Array(this.arrayBuffer, currentByte, 0x1000);
+      this.masterHashes[i].set(getHash(dataToHash));
+    }
+  };
 
   // TODO: clean this up
   // 0x1000 (0x4a0900): RomFS Directory/File area (aka Level 3)
@@ -264,15 +275,11 @@ export class CiaRomFs {
   // Level 1 contains hashes for each 0x1000 block of level 2
   // test.cia: 0xd900
   get level1Hashes() {
-    const level1HashesStartingByte =
-      this.startingByte +
-      CiaRomFs.LEVEL_3_OFFSET +
-      calculateAlignedSize(this.level3Size, this.level3BlockSize);
     const hashes: Uint8Array[] = [];
 
     for (
-      let currentByte = level1HashesStartingByte;
-      currentByte < level1HashesStartingByte + this.level1Size;
+      let currentByte = this.level1HashesStartingByte;
+      currentByte < this.level1HashesStartingByte + this.level1Size;
       currentByte += 0x20
     ) {
       const hash = new Uint8Array(this.arrayBuffer, currentByte, 0x20);
@@ -280,6 +287,14 @@ export class CiaRomFs {
     }
 
     return hashes;
+  }
+
+  private get level1HashesStartingByte() {
+    return (
+      this.startingByte +
+      CiaRomFs.LEVEL_3_OFFSET +
+      calculateAlignedSize(this.level3Size, this.level3BlockSize)
+    );
   }
 
   updateLevel1Hashes = (): void => {
@@ -332,10 +347,14 @@ export class CiaRomFs {
     }
   };
 
+  // TODO: what's the best way to handle this?
+  // - we could just pass this class to RomFsFile and have it call these methods directly
+  // - or have updateLevel2Hashes then call updateLevel1Hashes, and so on
+  // - or use a proper Observer pattern
   update = (): void => {
     this.updateLevel2Hashes();
     this.updateLevel1Hashes();
-    // TODO: update master hash
+    this.updateMasterHashes();
     // TODO: call NCCH update method
   };
 }

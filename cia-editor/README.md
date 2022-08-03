@@ -20,6 +20,9 @@
   - [x] Write title ID
   - [x] Write program ID
   - [ ] Write product code?
+  - [ ] Write ExeFS size?
+  - [ ] Write ExeFS hash
+  - [ ] Write RomFS offset? (if ExeFS size changes)
   - [ ] Write RomFS size
   - [ ] Write RomFS hash
 - ExeFS
@@ -30,7 +33,7 @@
 - RomFS
   - [ ] Write level 2 size
   - [ ] Write level 3 size
-  - [ ] Write master hash
+  - [x] Write master hashes
   - [x] Write level 1 hashes
   - [x] Write level 2 hashes
 - RomFS file metadata

@@ -75,6 +75,7 @@ export class CiaTitleMetadata {
     );
 
     this.infoRecordHash.set(getHash(dataToHash));
+    this.updateSignature();
   }
 
   // *** Content info records ***

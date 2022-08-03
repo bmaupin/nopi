@@ -67,7 +67,7 @@ export class RomFsFile {
       - [x] Title metadata contentHash needs to be updated
       - [x] Title metadata contentChunkHash needs to be updated
       - [x] Title metadata infoRecordHash
-      - [ ] Title metadata signature
+      - [x] Title metadata signature
 
       If the size of the content changes, here's what needs to be updated (in addition to the above):
       - [ ] Everything after the changed content needs to be moved in the file

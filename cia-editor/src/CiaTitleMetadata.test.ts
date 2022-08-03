@@ -24,17 +24,17 @@ beforeAll(async () => {
 });
 
 describe('title metadata', () => {
-  test('get signature', () => {
-    // ctrtool only returns the first part of the signature, which should be plenty just to test
-    expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
+  test('signature', () => {
+    // Change the RomFS file content and make sure the signature changes
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
+    expect(testCiaTitleMetadata.signature.slice(0, 4)).not.toEqual(
       fromHexString('7A7F734B')
     );
-  });
 
-  // Regenerate the signature in-place and make sure it doesn't chagne
-  test('updateSignature', () => {
-    testCiaTitleMetadata.updateSignature();
+    // Reset the content and check the signature again
+    testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
+      // ctrtool only returns the first part of the signature, which should be plenty just to test
       fromHexString('7A7F734B')
     );
   });

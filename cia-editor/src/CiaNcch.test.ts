@@ -33,7 +33,7 @@ describe('NCCH', () => {
       )
     );
 
-    // Reset the content and check the hash again
+    // Reset the content and check the signature again
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaNcch.signature.slice(0, 32)).toEqual(
       // Just compare the first line of the signature from ctrtool

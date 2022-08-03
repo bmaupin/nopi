@@ -1,4 +1,4 @@
-import { getSignature } from './utils';
+import { getHash, getSignature } from './utils';
 
 // NCCH is sometimes referred to as "content"
 // https://www.3dbrew.org/wiki/NCCH
@@ -30,9 +30,9 @@ export class CiaNcch {
 
   // TODO: this needs a setter
   // TODO: set content size everywhere at once (header, TMD, NCCH)
+  // Content size, in bytes
+  // Internally, this is stored in "media units" and we convert it to bytes
   // 0x3a04
-  // "Content size, in media units (1 media unit = 0x200 bytes)" 🤷‍♂️
-  // https://www.3dbrew.org/wiki/NCCH#NCCH_Header
   get contentSize() {
     const dataView = new DataView(
       this.arrayBuffer,
@@ -91,6 +91,7 @@ export class CiaNcch {
     return new TextDecoder('utf8').decode(uintArray).replace(/\0.*$/g, '');
   }
 
+  // RomFS offset, in bytes
   // 0x3ab0
   get romFsOffset() {
     const dataView = new DataView(
@@ -103,9 +104,8 @@ export class CiaNcch {
   }
 
   // TODO: this needs a setter
+  // RomFS size, in bytes
   // 0x3ab4
-  // "RomFS size, in media units"
-  // https://www.3dbrew.org/wiki/NCCH#NCCH_Header
   get romFsSize() {
     const dataView = new DataView(
       this.arrayBuffer,
@@ -116,9 +116,29 @@ export class CiaNcch {
     return romFsSizeInMediaUnits * 0x200;
   }
 
-  // TODO: this needs a setter
+  private get romFsHeaderSize() {
+    const dataView = new DataView(
+      this.arrayBuffer,
+      this.startingByte + 0x1b8,
+      0x4
+    );
+    const romFsHeaderSizeInMediaUnits = dataView.getUint32(0, true);
+    return romFsHeaderSizeInMediaUnits * 0x200;
+  }
+
+  // Hash of the first 0x200 block (1 "media unit") of data in the RomFS
   // 0x3ae0 (0x1e0 offset in the NCCH)
   get romFsHash() {
     return new Uint8Array(this.arrayBuffer, this.startingByte + 0x1e0, 0x20);
   }
+
+  updateRomFsHash = (): void => {
+    const dataToHash = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + this.romFsOffset,
+      this.romFsHeaderSize
+    );
+
+    this.romFsHash.set(getHash(dataToHash));
+  };
 }

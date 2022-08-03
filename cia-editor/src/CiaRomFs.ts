@@ -1,6 +1,7 @@
 // https://www.3dbrew.org/wiki/RomFS
 // http://problemkaputt.de/gbatek-3ds-files-ncch-romfs.htm
 
+import { CiaNcch } from './CiaNcch';
 import { RomFsFile } from './RomFsFile';
 import { calculateAlignedSize, getHash } from './utils';
 
@@ -8,13 +9,17 @@ import { calculateAlignedSize, getHash } from './utils';
 export class CiaRomFs {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
+  private ncch: CiaNcch;
 
   private static LEVEL_3_OFFSET = 0x1000;
 
-  constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
+  constructor(arrayBuffer: ArrayBuffer, startingByte: number, ncch: CiaNcch) {
     this.arrayBuffer = arrayBuffer;
     this.startingByte = startingByte;
+    this.ncch = ncch;
   }
+
+  // *** RomFS header ***
 
   // test.cia: RomFs starts at 0xb900
   // retroarch cia: RomFs starts at 0x49f900
@@ -134,6 +139,8 @@ export class CiaRomFs {
     }
   };
 
+  // *** RomFS level 3 ***
+
   // TODO: clean this up
   // 0x1000 (0x4a0900): RomFS Directory/File area (aka Level 3)
   // test.cia: 0xc900
@@ -225,7 +232,9 @@ export class CiaRomFs {
     return currentFiles;
   }
 
-  /*
+  // *** RomFS level 1 ***
+
+  /* TODO
     - bottom_menu.png
       - location: 0x4a0f60 - 0x4a281a
          0x49f900 + 0x1000 + file data offset (0x290) + offset (0x3d0)
@@ -308,6 +317,8 @@ export class CiaRomFs {
     }
   };
 
+  // *** RomFS level 2 ***
+
   // Level 2 contains hashes for each 0x1000 block of level 3
   // test.cia: 0xe900
   get level2Hashes() {
@@ -355,6 +366,6 @@ export class CiaRomFs {
     this.updateLevel2Hashes();
     this.updateLevel1Hashes();
     this.updateMasterHashes();
-    // TODO: call NCCH update method
+    this.ncch.updateRomFsHash();
   };
 }

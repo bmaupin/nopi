@@ -4,9 +4,15 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { CiaFile } from './CiaFile';
 
 import { CiaNcch } from './CiaNcch';
-import { fromHexString } from './testutils';
+import { CiaRomFs } from './CiaRomFs';
+import {
+  fromHexString,
+  TEST_TXT_INITIAL_CONTENT,
+  TEST_TXT_NEW_CONTENT,
+} from './testutils';
 
 let testCiaNcch: CiaNcch;
+let testCiaRomFs: CiaRomFs;
 
 beforeAll(async () => {
   const ciaArrayBuffer = (
@@ -14,6 +20,7 @@ beforeAll(async () => {
   ).buffer;
   const ciaFile = new CiaFile(ciaArrayBuffer);
   testCiaNcch = ciaFile.ncch;
+  testCiaRomFs = ciaFile.romFs;
 });
 
 describe('NCCH', () => {
@@ -60,7 +67,18 @@ describe('NCCH', () => {
     expect(testCiaNcch.romFsSize).toEqual(0x00004000);
   });
 
-  test('get romFsHash', () => {
+  test('romFsHash', () => {
+    // Change the RomFS file content and make sure the hash changes
+    // (The only way to test this is to change something inside the RomFS)
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
+    expect(testCiaNcch.romFsHash).not.toEqual(
+      fromHexString(
+        '9C27E3EE3C26C56BBB9851A72C13CE6A3A877ED9D17075AF8A11396AB524EE92'
+      )
+    );
+
+    // Reset the content and check the hash again
+    testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaNcch.romFsHash).toEqual(
       fromHexString(
         '9C27E3EE3C26C56BBB9851A72C13CE6A3A877ED9D17075AF8A11396AB524EE92'

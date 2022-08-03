@@ -24,7 +24,7 @@
   - [ ] Write ExeFS hash
   - [ ] Write RomFS offset? (if ExeFS size changes)
   - [ ] Write RomFS size
-  - [ ] Write RomFS hash
+  - [x] Write RomFS hash
 - ExeFS
   - [ ] Write file offset?
   - [ ] Write file size?

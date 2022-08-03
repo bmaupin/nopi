@@ -51,7 +51,7 @@ export class CiaFile {
     // this.exeFs = new CiaExeFs(this.arrayBuffer, exeFsStartingByte);
 
     const romFsStartingByte = ncchStartingByte + this.ncch.romFsOffset;
-    this.romFs = new CiaRomFs(this.arrayBuffer, romFsStartingByte);
+    this.romFs = new CiaRomFs(this.arrayBuffer, romFsStartingByte, this.ncch);
   }
 
   public static fromBlob = async (blob: Blob): Promise<CiaFile> => {

@@ -140,5 +140,6 @@ export class CiaNcch {
     );
 
     this.romFsHash.set(getHash(dataToHash));
+    this.updateSignature();
   };
 }

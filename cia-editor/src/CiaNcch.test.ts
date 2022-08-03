@@ -24,19 +24,19 @@ beforeAll(async () => {
 });
 
 describe('NCCH', () => {
-  test('get signature', () => {
-    // just compare the first line of the signature from ctrtool
-    expect(testCiaNcch.signature.slice(0, 32)).toEqual(
+  test('signature', () => {
+    // Change the RomFS file content and make sure the signature changes
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
+    expect(testCiaNcch.signature.slice(0, 32)).not.toEqual(
       fromHexString(
         '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
       )
     );
-  });
 
-  // Regenerate the signature in-place and make sure it doesn't chagne
-  test('updateSignature', () => {
-    testCiaNcch.updateSignature();
+    // Reset the content and check the hash again
+    testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaNcch.signature.slice(0, 32)).toEqual(
+      // Just compare the first line of the signature from ctrtool
       fromHexString(
         '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
       )

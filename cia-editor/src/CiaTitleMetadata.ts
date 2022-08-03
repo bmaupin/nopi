@@ -1,4 +1,6 @@
 import {
+  calculateAlignedSize,
+  getHash,
   getSignature,
   getSignatureSectionSize,
   getSignatureSize,
@@ -75,18 +77,20 @@ export class CiaTitleMetadata {
 
   // TODO: this needs a setter
   // TODO: set content size everywhere at once (header, TMD, NCCH)
+  // Size in bytes of the content (the NCCH, including the ExeFS and the RomFS)
   // 0x38cc (0xb0c offset in the TMD, 0x8 offset in the content chunk records section)
-  get contentSize(): bigint {
+  get contentSize() {
     const dataView = new DataView(
       this.arrayBuffer,
-      this.startingByte + getSignatureSectionSize(this.signatureType) + 0x9cc,
-      0x8
+      // This is technically a 64-bit integer at 0x9cc, but get a 32-bit integer at 0x9d0 (big endian) instead
+      this.startingByte + getSignatureSectionSize(this.signatureType) + 0x9d0,
+      0x4
     );
     // big endian 😝
-    return dataView.getBigUint64(0, false);
+    return dataView.getUint32(0, false);
   }
 
-  // TODO: this needs a setter
+  // Hash over the entire content (the NCCH, including the ExeFS and the RomFS)
   // 0x38d4 (0xb14 offset in the TMD, 0x10 offset in the content chunk records section)
   get contentHash() {
     return new Uint8Array(
@@ -95,6 +99,17 @@ export class CiaTitleMetadata {
       0x20
     );
   }
+
+  updateContentHash = () => {
+    const dataToHash = new Uint8Array(
+      this.arrayBuffer,
+      // This corresponds with the starting byte of the NCCH section
+      calculateAlignedSize(this.startingByte + this.size, 0x40),
+      this.contentSize
+    );
+
+    this.contentHash.set(getHash(dataToHash));
+  };
 
   get size() {
     return getSignatureSectionSize(this.signatureType) + 0x9f4;

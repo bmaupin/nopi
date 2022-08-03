@@ -1,3 +1,4 @@
+import { CiaTitleMetadata } from './CiaTitleMetadata';
 import { getHash, getSignature } from './utils';
 
 // NCCH is sometimes referred to as "content"
@@ -7,10 +8,16 @@ import { getHash, getSignature } from './utils';
 export class CiaNcch {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
+  private titleMetadata: CiaTitleMetadata;
 
-  constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
+  constructor(
+    arrayBuffer: ArrayBuffer,
+    startingByte: number,
+    titleMetadata: CiaTitleMetadata
+  ) {
     this.arrayBuffer = arrayBuffer;
     this.startingByte = startingByte;
+    this.titleMetadata = titleMetadata;
   }
 
   // 0x3900
@@ -26,6 +33,9 @@ export class CiaNcch {
     );
 
     this.signature.set(getSignature(dataToSign));
+    // The NCCH signature should get updated any time anything in the NCCH changes, so
+    // this is a good place to update the TMD content hash
+    this.titleMetadata.updateContentHash();
   };
 
   // TODO: this needs a setter

@@ -13,7 +13,7 @@
   - [ ] Write info record hash
   - [ ] Write content chunk hash
   - [ ] Write content size
-  - [ ] Write content hash
+  - [x] Write content hash
 - NCCH
   - [x] Write signature
   - [ ] Write content size

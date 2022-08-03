@@ -44,7 +44,11 @@ export class CiaFile {
       titleMetadataStartingByte + this.titleMetadata.size,
       0x40
     );
-    this.ncch = new CiaNcch(this.arrayBuffer, ncchStartingByte);
+    this.ncch = new CiaNcch(
+      this.arrayBuffer,
+      ncchStartingByte,
+      this.titleMetadata
+    );
 
     // TODO: implement this
     // const exeFsStartingByte = ncchStartingByte + this.ncch.exeFsOffset;

@@ -64,7 +64,7 @@ export class RomFsFile {
       - [x] Master hash needs to be updated to reflect changed level 1 contents
       - [x] NCCH RomFS hash needs to be updated to reflect changed RomFS contents
       - [x] NCCH signature needs to be updated to reflect changed NCCH header contents
-      - [ ] Title metadata contentHash needs to be updated
+      - [x] Title metadata contentHash needs to be updated
       - [ ] Title metadata contentChunkHash needs to be updated
       - [ ] Title metadata infoRecordHash
       - [ ] Title metadata signature

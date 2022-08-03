@@ -2,11 +2,17 @@ import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { CiaFile } from './CiaFile';
+import { CiaRomFs } from './CiaRomFs';
 
 import { CiaTitleMetadata } from './CiaTitleMetadata';
-import { fromHexString } from './testutils';
+import {
+  fromHexString,
+  TEST_TXT_INITIAL_CONTENT,
+  TEST_TXT_NEW_CONTENT,
+} from './testutils';
 
 let testCiaTitleMetadata: CiaTitleMetadata;
+let testCiaRomFs: CiaRomFs;
 
 beforeAll(async () => {
   const ciaArrayBuffer = (
@@ -14,6 +20,7 @@ beforeAll(async () => {
   ).buffer;
   const ciaFile = new CiaFile(ciaArrayBuffer);
   testCiaTitleMetadata = ciaFile.titleMetadata;
+  testCiaRomFs = ciaFile.romFs;
 });
 
 describe('title metadata', () => {
@@ -61,10 +68,21 @@ describe('title metadata', () => {
   });
 
   test('get contentSize', () => {
-    expect(testCiaTitleMetadata.contentSize).toEqual(BigInt(0xc000));
+    expect(testCiaTitleMetadata.contentSize).toEqual(0xc000);
   });
 
-  test('get contentHash', () => {
+  test('contentHash', () => {
+    // Change the RomFS file content and make sure the hash changes
+    // (The only way to test this is to change something inside the content (NCCH))
+    testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
+    expect(testCiaTitleMetadata.contentHash).not.toEqual(
+      fromHexString(
+        '44CC44CB6E1726BB4641122E0161560AFC9F5A974BF802152CC3A5C25EC45666'
+      )
+    );
+
+    // Reset the content and check the hash again
+    testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaTitleMetadata.contentHash).toEqual(
       fromHexString(
         '44CC44CB6E1726BB4641122E0161560AFC9F5A974BF802152CC3A5C25EC45666'

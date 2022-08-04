@@ -1,5 +1,13 @@
 #### Goals
 
+17/38 tasks complete (44%)
+
+```
+tasks_complete=$(cat README.md | grep "\[x\]" | wc -l)
+tasks_total=$((tasks_complete + $(cat README.md | grep "\[ \]" | wc -l)))
+echo "$tasks_complete/$tasks_total tasks complete ($((tasks_complete*100/tasks_total))%)"
+```
+
 - Header
   - [ ] Write content size
 - Ticket
@@ -26,9 +34,9 @@
   - [ ] Write RomFS size
   - [x] Write RomFS hash
 - NCCH extended header
-  - [ ] Write Jump ID?
-  - [ ] Write Program ID?
-  - [ ] Title ID at 0x4100?
+  - [ ] Write Jump ID? (same as Title ID?)
+  - [ ] Write Program ID? (same as Title ID?)
+  - [ ] Title ID at 0x4100? (same as Title ID?)
 - ExeFS
   - [ ] Write file offset?
   - [ ] Write file size?

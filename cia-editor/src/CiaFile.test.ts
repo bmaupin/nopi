@@ -1,10 +1,14 @@
 import { Blob } from 'fetch-blob';
-import { readFile } from 'fs/promises';
+import { readFile, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { beforeAll, describe, expect, test } from 'vitest';
 
 import { CiaFile } from './CiaFile';
-import { fromHexString } from './testutils';
+import {
+  fromHexString,
+  TEST_TXT_INITIAL_CONTENT,
+  TEST_TXT_NEW_CONTENT,
+} from './testutils';
 
 let testCiaBlob: Blob;
 let testCiaArrayBuffer: ArrayBuffer;
@@ -65,5 +69,19 @@ describe('CiaFile', () => {
         '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
       )
     );
+  });
+
+  // Enable this manually for testing as needed
+  test.skip('write CIA file', async () => {
+    // Set new RomFS file content and write the CIA file
+    testCiaFile.romFs.files[0].content = TEST_TXT_NEW_CONTENT;
+
+    await writeFile(
+      resolve(__dirname, 'testdata/out.cia'),
+      Buffer.from(await testCiaFile.toBlob().arrayBuffer())
+    );
+
+    // Reset the RomFS file content to prevent breaking other tests
+    testCiaFile.romFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
   });
 });

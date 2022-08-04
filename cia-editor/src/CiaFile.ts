@@ -1,3 +1,5 @@
+import { Blob } from 'fetch-blob';
+
 import { CiaCertChain } from './CiaCertChain';
 import { CiaHeader } from './CiaHeader';
 import { CiaNcch } from './CiaNcch';
@@ -60,6 +62,11 @@ export class CiaFile {
 
   public static fromBlob = async (blob: Blob): Promise<CiaFile> => {
     return new CiaFile(await blob.arrayBuffer());
+  };
+
+  // TODO: do we need this? or should we work directly with the array buffer?
+  toBlob = (): Blob => {
+    return new Blob([this.arrayBuffer]);
   };
 
   // The title ID occurs at different points in the CIA file; we'll consider the one in

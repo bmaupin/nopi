@@ -49,9 +49,13 @@ describe('NCCH', () => {
 
   test('get titleId', () => {
     expect(testCiaNcch.titleId).toEqual(fromHexString('000400000ff3ff00'));
+    // Read the title ID twice; this is intentional because it's stored in reverse and
+    // there was a bug where reading it would reverse the data in place
+    expect(testCiaNcch.titleId).toEqual(fromHexString('000400000ff3ff00'));
   });
 
   test('get programId', () => {
+    expect(testCiaNcch.programId).toEqual(fromHexString('000400000ff3ff00'));
     expect(testCiaNcch.programId).toEqual(fromHexString('000400000ff3ff00'));
   });
 

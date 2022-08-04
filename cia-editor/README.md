@@ -25,12 +25,18 @@
   - [ ] Write RomFS offset? (if ExeFS size changes)
   - [ ] Write RomFS size
   - [x] Write RomFS hash
+- NCCH extended header
+  - [ ] Write Jump ID?
+  - [ ] Write Program ID?
+  - [ ] Title ID at 0x4100?
 - ExeFS
   - [ ] Write file offset?
   - [ ] Write file size?
   - [ ] Write file hash
   - [ ] Write file content
 - RomFS
+  - [ ] Write master hashes size
+  - [ ] Write level 1 size
   - [ ] Write level 2 size
   - [ ] Write level 3 size
   - [x] Write master hashes

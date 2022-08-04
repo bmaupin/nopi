@@ -48,6 +48,8 @@ export class RomFsFile {
   // 1. To make it easier to set the content (set it directly instead of having to call .set)
   // 2. When the content is changed, we'll need to trigger methods to update the various hashes throughout the CIA file
   get content() {
+    // Don't return the Uint8Array directly to prevent clients from accidentally directly
+    // calling content.set(), which would avoid updating the hashes, etc.
     return this._content;
   }
 
@@ -69,17 +71,20 @@ export class RomFsFile {
       - [x] Title metadata infoRecordHash
       - [x] Title metadata signature
 
-      If the size of the content changes, here's what needs to be updated (in addition to the above):
-      - [ ] Everything after the changed content needs to be moved in the file
+      If there's only one file in the RomFS and the content changes, here's what needs to be updated (in addition to the above):
+      - [ ] The new file content needs to be inserted in the file and everything after it needs to be shifted
       - [ ] RomFsFileMetadata fileDataSize
-      - [ ] RomFsFileMetadata fileDataOffset for all files after the changed file
       - [ ] CiaRomFs level3Size
       - [ ] CiaRomFs level2Size
-      - [ ] (We shouldn't need to change this) CiaRomFs level1Size
-      - [ ] (We shouldn't need to change this) CiaRomFs masterHashSize
+      - [ ] CiaRomFs level1Size
+      - [ ] CiaRomFs masterHashSize
       - [ ] CiaNcch romFsSize
       - [ ] CiaNcch contentSize
       - [ ] CiaTitleMetadata contentSize
       - [ ] header contentSize
+
+      If there are multiple files in the RomFS and the content changes, here's what needs to be updated (in addition to the above):
+      - [ ] Everything after the changed content needs to be moved in the file
+      - [ ] RomFsFileMetadata fileDataOffset for all files after the changed file
      */
 }

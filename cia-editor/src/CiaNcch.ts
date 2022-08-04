@@ -10,6 +10,9 @@ export class CiaNcch {
   private startingByte: number;
   private titleMetadata: CiaTitleMetadata;
 
+  private _titleId: Uint8Array;
+  private _programId: Uint8Array;
+
   constructor(
     arrayBuffer: ArrayBuffer,
     startingByte: number,
@@ -18,6 +21,19 @@ export class CiaNcch {
     this.arrayBuffer = arrayBuffer;
     this.startingByte = startingByte;
     this.titleMetadata = titleMetadata;
+
+    // Store the actual byte arrays for the title ID/program ID in private properties to
+    // be used by the getters and setters
+    this._titleId = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + 0x108,
+      0x8
+    );
+    this._programId = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + 0x118,
+      0x8
+    );
   }
 
   // 0x3900
@@ -55,12 +71,11 @@ export class CiaNcch {
 
   // 0x3a08
   get titleId() {
-    return new Uint8Array(
-      this.arrayBuffer,
-      this.startingByte + 0x108,
-      0x8
-      // The title ID is backwards here. Go figure
-    ).reverse();
+    // The title ID here in the file is backwards, so we want to reverse it before
+    // returning it. However, if we reverse the original array, it will change the
+    // contents of the actual file. So first store the original Uint8Array (we'll need it
+    // in the setter), then make a copy, reverse it instead, and return that.
+    return new Uint8Array(this._titleId).reverse();
   }
 
   set titleId(newTitleId: Uint8Array) {
@@ -68,17 +83,13 @@ export class CiaNcch {
     const copyOfNewTitleId = new Uint8Array(newTitleId);
     copyOfNewTitleId.reverse();
 
-    this.titleId.set(copyOfNewTitleId);
+    this._titleId.set(copyOfNewTitleId);
   }
 
   // 0x3a18
   get programId() {
-    return new Uint8Array(
-      this.arrayBuffer,
-      this.startingByte + 0x118,
-      0x8
-      // The title ID is backwards here. Go figure
-    ).reverse();
+    // This seems to be the same as the title ID
+    return new Uint8Array(this._programId).reverse();
   }
 
   set programId(newProgramId: Uint8Array) {
@@ -86,7 +97,7 @@ export class CiaNcch {
     const copyOfNewProgramId = new Uint8Array(newProgramId);
     copyOfNewProgramId.reverse();
 
-    this.programId.set(copyOfNewProgramId);
+    this._programId.set(copyOfNewProgramId);
   }
 
   // TODO: does this need to be changed/be unique?

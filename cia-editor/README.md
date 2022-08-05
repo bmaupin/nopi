@@ -1,6 +1,6 @@
 #### Goals
 
-17/38 tasks complete (44%)
+17/40 tasks complete (42%)
 
 ```
 tasks_complete=$(cat README.md | grep "\[x\]" | wc -l)
@@ -26,17 +26,19 @@ echo "$tasks_complete/$tasks_total tasks complete ($((tasks_complete*100/tasks_t
   - [x] Write signature
   - [ ] Write content size
   - [x] Write title ID
-  - [x] Write program ID
+  - [x] Write program ID (same as Title ID)
   - [ ] Write product code?
-  - [ ] Write ExeFS size?
+  - [ ] Exheader hash
+  - [ ] Write ExeFS size? (if ExeFS size changes)
   - [ ] Write ExeFS hash
   - [ ] Write RomFS offset? (if ExeFS size changes)
   - [ ] Write RomFS size
   - [x] Write RomFS hash
 - NCCH extended header
-  - [ ] Write Jump ID? (same as Title ID?)
-  - [ ] Write Program ID? (same as Title ID?)
-  - [ ] Title ID at 0x4100? (same as Title ID?)
+  - [ ] Signature
+  - [ ] Write Jump ID (same as Title ID)
+  - [ ] Write Program ID (same as Title ID)
+  - [ ] Title ID at 0x4100 (same as Title ID)
 - ExeFS
   - [ ] Write file offset?
   - [ ] Write file size?

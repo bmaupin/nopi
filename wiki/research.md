@@ -165,3 +165,35 @@ makerom -f ncch -o retroarch.ncch -code exefs.bin -exheader exheader.bin -romfs 
 <!-- makerom -f ncch -o retroarch.ncch -code exefs.bin -exheader exheader.bin -romfs romfs.bin -rsf ../retroarch.rsf -->
 <!-- Doesn't update header -->
 <!-- 3dstool -ctf cxi newcxi.bin --header header.bin --exh exheader.bin --exefs exefs.bin --romfs romfs.bin -->
+
+## Differences between CIA files
+
+#### Re-create CIA file with same NCCH
+
+- Ticket
+  - Signature
+  - Title key
+  - Ticket ID
+
+#### Re-create CIA file with same NCCH and different title ID
+
+- Ticket
+  - Signature
+  - Title key
+  - Ticket ID
+  - Title ID
+- TMD
+  - Signature
+  - Title ID
+  - Content info
+    - ~~Content ID~~ (This only seems to change when making a CIA directly from an ELF instead of using an intermediate NCCH)
+    - Hash
+- NCCH
+  - Signature
+  - Title ID
+  - Program ID
+  - Exheader hash
+- Exheader
+  - Signature
+  - Jump ID
+  - Program ID

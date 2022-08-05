@@ -62,3 +62,41 @@ It was created using these steps:
    ```
    makerom -f cia -o test.cia -content test.ncch:0:0
    ```
+
+#### Re-create the CIA file
+
+I did this to create another file as similar as possible, but with the title ID changed.
+Unfortunately the NCCH file can't be reused since the header/exheader contains the title
+ID. In addition, it can't be rebuilt because makerom can only rebuild an NCCH when
+provided the code, RomFS, and exheader. 3dstool can't create NCCH files without a header.
+
+1. Extract the NCCH from the existing CIA
+
+   ```
+   ctrtool --contents=contents test.cia
+   mv contents.* test.ncch
+   ```
+
+1. Extract ExeFS, logo, RomFS from NCCH
+
+   ```
+   3dstool -xtf cxi test.ncch --exefs exefs.bin --logo logo.bin --romfs romfs.bin
+   ```
+
+1. Extract code, icon from ExeFS
+
+   ```
+   3dstool -xtf exefs exefs.bin --exefs-dir exefs/
+   ```
+
+1. Make any changes to the RSF as desired
+
+   e.g. in this case, I changed the title ID
+
+1. Repeat the steps in the previous section to create a new ELF, dummy RomFS, then create the NCCH from those plus the extracted icon. Finally create the CIA
+
+   Alternatively, you can create a new CIA directly from the ELF, icon, RomFS, but **note** that this will use a different content ID inside the TMD for some reason:
+
+   ```
+   makerom -f cia -o test3.cia -target t -elf a.out -rsf test.rsf -icon exefs/icon.icn -romfs romfs.bin
+   ```

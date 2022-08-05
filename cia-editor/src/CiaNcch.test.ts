@@ -7,6 +7,8 @@ import { CiaNcch } from './CiaNcch';
 import { CiaRomFs } from './CiaRomFs';
 import {
   fromHexString,
+  TEST_INITIAL_TITLE_ID,
+  TEST_NEW_TITLE_ID,
   TEST_TXT_INITIAL_CONTENT,
   TEST_TXT_NEW_CONTENT,
 } from './testutils';
@@ -47,16 +49,33 @@ describe('NCCH', () => {
     expect(testCiaNcch.contentSize).toEqual(0x0000c000);
   });
 
-  test('get titleId', () => {
-    expect(testCiaNcch.titleId).toEqual(fromHexString('000400000ff3ff00'));
+  test('titleId', () => {
+    expect(testCiaNcch.titleId).toEqual(TEST_INITIAL_TITLE_ID);
     // Read the title ID twice; this is intentional because it's stored in reverse and
     // there was a bug where reading it would reverse the data in place
-    expect(testCiaNcch.titleId).toEqual(fromHexString('000400000ff3ff00'));
+    expect(testCiaNcch.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+
+    testCiaNcch.titleId = TEST_NEW_TITLE_ID;
+    expect(testCiaNcch.titleId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaNcch.titleId).toEqual(TEST_NEW_TITLE_ID);
+
+    // Reset to the initial value
+    testCiaNcch.titleId = TEST_INITIAL_TITLE_ID;
+    expect(testCiaNcch.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaNcch.titleId).toEqual(TEST_INITIAL_TITLE_ID);
   });
 
-  test('get programId', () => {
-    expect(testCiaNcch.programId).toEqual(fromHexString('000400000ff3ff00'));
-    expect(testCiaNcch.programId).toEqual(fromHexString('000400000ff3ff00'));
+  test('programId', () => {
+    expect(testCiaNcch.programId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaNcch.programId).toEqual(TEST_INITIAL_TITLE_ID);
+
+    testCiaNcch.programId = TEST_NEW_TITLE_ID;
+    expect(testCiaNcch.programId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaNcch.programId).toEqual(TEST_NEW_TITLE_ID);
+
+    testCiaNcch.programId = TEST_INITIAL_TITLE_ID;
+    expect(testCiaNcch.programId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaNcch.programId).toEqual(TEST_INITIAL_TITLE_ID);
   });
 
   test('get productCode', () => {

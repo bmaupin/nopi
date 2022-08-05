@@ -6,6 +6,7 @@ import { CiaNcch } from './CiaNcch';
 import { CiaRomFs } from './CiaRomFs';
 import { CiaTicket } from './CiaTicket';
 import { CiaTitleMetadata } from './CiaTitleMetadata';
+import { NcchExHeader } from './NcchExHeader';
 import { calculateAlignedSize } from './utils';
 
 // https://www.3dbrew.org/wiki/CIA
@@ -17,6 +18,7 @@ export class CiaFile {
   ticket: CiaTicket;
   titleMetadata: CiaTitleMetadata;
   ncch: CiaNcch;
+  ncchExHeader: NcchExHeader;
   romFs: CiaRomFs;
 
   constructor(arrayBuffer: ArrayBuffer) {
@@ -50,6 +52,15 @@ export class CiaFile {
       this.arrayBuffer,
       ncchStartingByte,
       this.titleMetadata
+    );
+
+    const ncchExHeaderStartingByte = calculateAlignedSize(
+      ncchStartingByte + this.ncch.size,
+      0x40
+    );
+    this.ncchExHeader = new NcchExHeader(
+      this.arrayBuffer,
+      ncchExHeaderStartingByte
     );
 
     // TODO: implement this

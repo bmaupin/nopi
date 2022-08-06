@@ -1,7 +1,7 @@
 // https://www.3dbrew.org/wiki/RomFS
 // http://problemkaputt.de/gbatek-3ds-files-ncch-romfs.htm
 
-import { CiaNcch } from './CiaNcch';
+import { NcchHeader } from './NcchHeader';
 import { RomFsFile } from './RomFsFile';
 import { calculateAlignedSize, getHash } from './utils';
 
@@ -9,14 +9,18 @@ import { calculateAlignedSize, getHash } from './utils';
 export class CiaRomFs {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
-  private ncch: CiaNcch;
+  private ncchHeader: NcchHeader;
 
   private static LEVEL_3_OFFSET = 0x1000;
 
-  constructor(arrayBuffer: ArrayBuffer, startingByte: number, ncch: CiaNcch) {
+  constructor(
+    arrayBuffer: ArrayBuffer,
+    startingByte: number,
+    ncchHeader: NcchHeader
+  ) {
     this.arrayBuffer = arrayBuffer;
     this.startingByte = startingByte;
-    this.ncch = ncch;
+    this.ncchHeader = ncchHeader;
   }
 
   // *** RomFS header ***
@@ -138,7 +142,7 @@ export class CiaRomFs {
       this.masterHashes[i].set(getHash(dataToHash));
     }
 
-    this.ncch.updateRomFsHash();
+    this.ncchHeader.updateRomFsHash();
   };
 
   // *** RomFS level 3 ***

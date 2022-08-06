@@ -2,11 +2,11 @@ import { Blob } from 'fetch-blob';
 
 import { CiaCertChain } from './CiaCertChain';
 import { CiaHeader } from './CiaHeader';
-import { CiaNcch } from './CiaNcch';
 import { CiaRomFs } from './CiaRomFs';
 import { CiaTicket } from './CiaTicket';
 import { CiaTitleMetadata } from './CiaTitleMetadata';
 import { NcchExHeader } from './NcchExHeader';
+import { NcchHeader } from './NcchHeader';
 import { calculateAlignedSize } from './utils';
 
 // https://www.3dbrew.org/wiki/CIA
@@ -17,7 +17,7 @@ export class CiaFile {
   certChain: CiaCertChain;
   ticket: CiaTicket;
   titleMetadata: CiaTitleMetadata;
-  ncch: CiaNcch;
+  ncchHeader: NcchHeader;
   ncchExHeader: NcchExHeader;
   romFs: CiaRomFs;
 
@@ -44,18 +44,18 @@ export class CiaFile {
       titleMetadataStartingByte
     );
 
-    const ncchStartingByte = calculateAlignedSize(
+    const ncchHeaderStartingByte = calculateAlignedSize(
       titleMetadataStartingByte + this.titleMetadata.size,
       0x40
     );
-    this.ncch = new CiaNcch(
+    this.ncchHeader = new NcchHeader(
       this.arrayBuffer,
-      ncchStartingByte,
+      ncchHeaderStartingByte,
       this.titleMetadata
     );
 
     const ncchExHeaderStartingByte = calculateAlignedSize(
-      ncchStartingByte + this.ncch.size,
+      ncchHeaderStartingByte + this.ncchHeader.size,
       0x40
     );
     this.ncchExHeader = new NcchExHeader(
@@ -67,8 +67,13 @@ export class CiaFile {
     // const exeFsStartingByte = ncchStartingByte + this.ncch.exeFsOffset;
     // this.exeFs = new CiaExeFs(this.arrayBuffer, exeFsStartingByte);
 
-    const romFsStartingByte = ncchStartingByte + this.ncch.romFsOffset;
-    this.romFs = new CiaRomFs(this.arrayBuffer, romFsStartingByte, this.ncch);
+    const romFsStartingByte =
+      ncchHeaderStartingByte + this.ncchHeader.romFsOffset;
+    this.romFs = new CiaRomFs(
+      this.arrayBuffer,
+      romFsStartingByte,
+      this.ncchHeader
+    );
   }
 
   public static fromBlob = async (blob: Blob): Promise<CiaFile> => {
@@ -106,9 +111,9 @@ export class CiaFile {
     this.titleMetadata.titleId = newTitleId;
     this.titleMetadata.updateSignature();
 
-    this.ncch.titleId = newTitleId;
-    this.ncch.programId = newTitleId;
-    this.ncch.updateSignature();
+    this.ncchHeader.titleId = newTitleId;
+    this.ncchHeader.programId = newTitleId;
+    this.ncchHeader.updateSignature();
   }
 
   /* TODO: how to change file content

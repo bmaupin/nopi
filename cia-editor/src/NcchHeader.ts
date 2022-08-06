@@ -1,13 +1,12 @@
 import { CiaTitleMetadata } from './CiaTitleMetadata';
 import { getHash, getSignature } from './utils';
 
-// TODO: rename; this class just represents the NCCH header and not the entire NCCH
 // NCCH header
 // NCCH is sometimes referred to as "content"
 // https://www.3dbrew.org/wiki/NCCH
 // http://problemkaputt.de/gbatek-3ds-files-ncch-format.htm
 // Starts at 0x3900
-export class CiaNcch {
+export class NcchHeader {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
   private titleMetadata: CiaTitleMetadata;

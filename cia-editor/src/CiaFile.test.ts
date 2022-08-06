@@ -60,11 +60,13 @@ describe('CiaFile', () => {
       fromHexString('7A7F734B')
     );
 
-    expect(testCiaFile.ncch.titleId).toEqual(fromHexString('000400009f07c400'));
-    expect(testCiaFile.ncch.programId).toEqual(
+    expect(testCiaFile.ncchHeader.titleId).toEqual(
       fromHexString('000400009f07c400')
     );
-    expect(testCiaFile.ncch.signature.slice(0, 32)).not.toEqual(
+    expect(testCiaFile.ncchHeader.programId).toEqual(
+      fromHexString('000400009f07c400')
+    );
+    expect(testCiaFile.ncchHeader.signature.slice(0, 32)).not.toEqual(
       fromHexString(
         '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
       )

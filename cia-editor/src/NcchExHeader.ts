@@ -1,5 +1,8 @@
 // NCCH extended header
 // https://www.3dbrew.org/wiki/NCCH/Extended_Header#Main_Structure
+
+import { getSignature } from './utils';
+
 // http://problemkaputt.de/gbatek-3ds-files-ncch-extended-header.htm
 export class NcchExHeader {
   private arrayBuffer: ArrayBuffer;
@@ -69,12 +72,18 @@ export class NcchExHeader {
 
   // 0x3f00 (0x600 offset in NCCH, 0x400 offset in exheader)
   get signature() {
-    return new Uint8Array(this.arrayBuffer, this.startingByte, 0x400);
+    return new Uint8Array(this.arrayBuffer, this.startingByte + 0x400, 0x100);
   }
 
   updateSignature = () => {
-    // TODO: "RSA-SHA256 Signature across [900h..BFFh] (using key from bootrom)"
-    //
+    const dataToSign = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + 0x500,
+      0x300
+    );
+
+    this.signature.set(getSignature(dataToSign));
+
     // TODO: updating the signature here should trigger an update in the exheader hash in the NCCH header
   };
 

@@ -6,6 +6,8 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { CiaFile } from './CiaFile';
 import {
   fromHexString,
+  TEST_INITIAL_TITLE_ID,
+  TEST_NEW_TITLE_ID,
   TEST_TXT_INITIAL_CONTENT,
   TEST_TXT_NEW_CONTENT,
 } from './testutils';
@@ -31,18 +33,15 @@ describe('CiaFile', () => {
     expect(ciaFile).toBeInstanceOf(CiaFile);
   });
 
-  test('get titleId', () => {
-    expect(testCiaFile.titleId).toEqual(fromHexString('000400000ff3ff00'));
-  });
+  test('titleId', () => {
+    expect(testCiaFile.titleId).toEqual(TEST_INITIAL_TITLE_ID);
 
-  test('set titleId', () => {
-    testCiaFile.titleId = fromHexString('000400009f07c400');
+    // Update the title ID and make sure it gets updated everywhere it should
+    testCiaFile.titleId = TEST_NEW_TITLE_ID;
 
-    expect(testCiaFile.titleId).toEqual(fromHexString('000400009f07c400'));
+    expect(testCiaFile.titleId).toEqual(TEST_NEW_TITLE_ID);
 
-    expect(testCiaFile.ticket.titleId).toEqual(
-      fromHexString('000400009f07c400')
-    );
+    expect(testCiaFile.ticket.titleId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.ticket.ticketId).not.toEqual(
       fromHexString('0004a13e80326061')
     );
@@ -53,24 +52,24 @@ describe('CiaFile', () => {
       fromHexString('84C81489')
     );
 
-    expect(testCiaFile.titleMetadata.titleId).toEqual(
-      fromHexString('000400009f07c400')
-    );
+    expect(testCiaFile.titleMetadata.titleId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.titleMetadata.signature.slice(0, 4)).not.toEqual(
       fromHexString('7A7F734B')
     );
 
-    expect(testCiaFile.ncchHeader.titleId).toEqual(
-      fromHexString('000400009f07c400')
-    );
-    expect(testCiaFile.ncchHeader.programId).toEqual(
-      fromHexString('000400009f07c400')
-    );
+    expect(testCiaFile.ncchHeader.titleId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaFile.ncchHeader.programId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.ncchHeader.signature.slice(0, 32)).not.toEqual(
       fromHexString(
         '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
       )
     );
+
+    expect(testCiaFile.ncchExHeader.jumpId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaFile.ncchExHeader.programId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaFile.ncchExHeader.aci2ProgramId).toEqual(TEST_NEW_TITLE_ID);
+
+    testCiaFile.titleId = TEST_INITIAL_TITLE_ID;
   });
 
   // Enable this manually for testing as needed

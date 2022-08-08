@@ -5,7 +5,7 @@ import { CiaFile } from './CiaFile';
 
 import { NcchExHeader } from './NcchExHeader';
 import {
-  fromHexString,
+  TEST_INITIAL_EXHEADER_SIGNATURE,
   TEST_INITIAL_TITLE_ID,
   TEST_NEW_TITLE_ID,
 } from './testutils';
@@ -21,24 +21,25 @@ beforeAll(async () => {
 });
 
 describe('NCCH', () => {
-  // test('signature', () => {
-  //   // Change the RomFS file content and make sure the signature changes
-  //   testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
-  //   expect(testCiaNcchExHeader.signature.slice(0, 32)).not.toEqual(
-  //     fromHexString(
-  //       '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
-  //     )
-  //   );
+  test('signature', () => {
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
 
-  //   // Reset the content and check the signature again
-  //   testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
-  //   expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
-  //     // Just compare the first line of the signature from ctrtool
-  //     fromHexString(
-  //       '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
-  //     )
-  //   );
-  // });
+    // Change something inside the section used to calculate the signature, then regenerate it
+    testCiaNcchExHeader.aci2ProgramId = TEST_NEW_TITLE_ID;
+    testCiaNcchExHeader.updateSignature();
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).not.toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
+
+    // Reset the property and check the signature again
+    testCiaNcchExHeader.aci2ProgramId = TEST_INITIAL_TITLE_ID;
+    testCiaNcchExHeader.updateSignature();
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
+  });
 
   test('jumpId', () => {
     // See NCCH title ID for why we test this twice

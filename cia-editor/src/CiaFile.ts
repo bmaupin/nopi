@@ -91,17 +91,8 @@ export class CiaFile {
     return this.ticket.titleId;
   }
 
-  /* TODO: this feels a bit hacky
-     Idea:
-      - Make the ticketId/titleKey generation a separate process
-        - Make sure we have tests for them
-      - Have each property update the signature when it's changed?
-      - Make this consistent with how other properties are changed
-        - We have to update RomFS files from the RomFS object, so maybe we should update
-          these properties from their containing objects and just have them upate the
-          others using whatever method (e.g. Observer pattern) we use for the RomFS file
-          changes
-  */
+  // TODO: Make the ticketId/titleKey generation a separate process (with tests)
+  // TODO: update signatures when file is saved (e.g. toBlob)
   set titleId(newTitleId: Uint8Array) {
     this.ticket.titleId = newTitleId;
     this.ticket.generateNewTicketId();
@@ -114,6 +105,11 @@ export class CiaFile {
     this.ncchHeader.titleId = newTitleId;
     this.ncchHeader.programId = newTitleId;
     this.ncchHeader.updateSignature();
+
+    this.ncchExHeader.aci2ProgramId = newTitleId;
+    this.ncchExHeader.programId = newTitleId;
+    this.ncchExHeader.jumpId = newTitleId;
+    this.ncchExHeader.updateSignature();
   }
 
   /* TODO: how to change file content

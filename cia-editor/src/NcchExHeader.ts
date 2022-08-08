@@ -1,20 +1,27 @@
 // NCCH extended header
 // https://www.3dbrew.org/wiki/NCCH/Extended_Header#Main_Structure
 
+import { NcchHeader } from './NcchHeader';
 import { getSignature } from './utils';
 
 // http://problemkaputt.de/gbatek-3ds-files-ncch-extended-header.htm
 export class NcchExHeader {
   private arrayBuffer: ArrayBuffer;
   private startingByte: number;
+  private ncchHeader: NcchHeader;
 
   private _jumpId: Uint8Array;
   private _programId: Uint8Array;
   private _aci2ProgramId: Uint8Array;
 
-  constructor(arrayBuffer: ArrayBuffer, startingByte: number) {
+  constructor(
+    arrayBuffer: ArrayBuffer,
+    startingByte: number,
+    ncchHeader: NcchHeader
+  ) {
     this.arrayBuffer = arrayBuffer;
     this.startingByte = startingByte;
+    this.ncchHeader = ncchHeader;
 
     // Handle these similarly to title ID/program ID in NCCH
     this._jumpId = new Uint8Array(
@@ -49,6 +56,7 @@ export class NcchExHeader {
     copyOfNewId.reverse();
 
     this._jumpId.set(copyOfNewId);
+    this.ncchHeader.updateNcchExHeaderHash();
   }
 
   // *** "ACI" ***
@@ -66,6 +74,7 @@ export class NcchExHeader {
     copyOfNewId.reverse();
 
     this._programId.set(copyOfNewId);
+    this.ncchHeader.updateNcchExHeaderHash();
   }
 
   // *** Signature ***

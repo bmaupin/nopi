@@ -113,6 +113,20 @@ export class NcchHeader {
     return new TextDecoder('utf8').decode(uintArray).replace(/\0.*$/g, '');
   }
 
+  get ncchExHeaderHash() {
+    return new Uint8Array(this.arrayBuffer, this.startingByte + 0x160, 0x20);
+  }
+
+  updateNcchExHeaderHash() {
+    const dataToHash = new Uint8Array(
+      this.arrayBuffer,
+      this.startingByte + this.size,
+      0x400
+    );
+
+    this.ncchExHeaderHash.set(getHash(dataToHash));
+  }
+
   // RomFS offset, in bytes
   // 0x3ab0
   get romFsOffset() {

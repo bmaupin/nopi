@@ -4,9 +4,11 @@ import { beforeAll, describe, expect, test } from 'vitest';
 import { CiaFile } from './CiaFile';
 
 import { CiaRomFs } from './CiaRomFs';
+import { NcchExHeader } from './NcchExHeader';
 import { NcchHeader } from './NcchHeader';
 import {
   fromHexString,
+  TEST_INITIAL_EXHEADER_HASH,
   TEST_INITIAL_TITLE_ID,
   TEST_NEW_TITLE_ID,
   TEST_TXT_INITIAL_CONTENT,
@@ -15,6 +17,7 @@ import {
 
 let testCiaRomFs: CiaRomFs;
 let testNcchHeader: NcchHeader;
+let testNcchExHeader: NcchExHeader;
 
 beforeAll(async () => {
   const ciaArrayBuffer = (
@@ -22,6 +25,7 @@ beforeAll(async () => {
   ).buffer;
   const ciaFile = new CiaFile(ciaArrayBuffer);
   testNcchHeader = ciaFile.ncchHeader;
+  testNcchExHeader = ciaFile.ncchExHeader;
   testCiaRomFs = ciaFile.romFs;
 });
 
@@ -80,6 +84,24 @@ describe('NCCH', () => {
 
   test('get productCode', () => {
     expect(testNcchHeader.productCode).toEqual('CTR-P-CTAP');
+  });
+
+  test('ncchExHeaderHash', () => {
+    expect(testNcchHeader.ncchExHeaderHash.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_HASH
+    );
+
+    // Change the exheader jump ID and make sure the exheader hash changes
+    testNcchExHeader.jumpId = TEST_NEW_TITLE_ID;
+    expect(testNcchHeader.ncchExHeaderHash.slice(0, 32)).not.toEqual(
+      TEST_INITIAL_EXHEADER_HASH
+    );
+
+    // Reset to the initial value and check again
+    testNcchExHeader.jumpId = TEST_INITIAL_TITLE_ID;
+    expect(testNcchHeader.ncchExHeaderHash.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_HASH
+    );
   });
 
   test('get romFsOffset', () => {

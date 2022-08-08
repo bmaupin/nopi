@@ -60,7 +60,8 @@ export class CiaFile {
     );
     this.ncchExHeader = new NcchExHeader(
       this.arrayBuffer,
-      ncchExHeaderStartingByte
+      ncchExHeaderStartingByte,
+      this.ncchHeader
     );
 
     // TODO: implement this

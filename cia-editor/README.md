@@ -1,6 +1,6 @@
 #### Goals
 
-21/40 tasks complete (52%)
+22/40 tasks complete (55%)
 
 ```
 tasks_complete=$(cat README.md | grep "\[x\]" | wc -l)
@@ -28,7 +28,7 @@ echo "$tasks_complete/$tasks_total tasks complete ($((tasks_complete*100/tasks_t
   - [x] Write title ID
   - [x] Write program ID (same as Title ID)
   - [ ] Write product code?
-  - [ ] Exheader hash
+  - [x] Exheader hash
   - [ ] Write ExeFS size? (if ExeFS size changes)
   - [ ] Write ExeFS hash
   - [ ] Write RomFS offset? (if ExeFS size changes)

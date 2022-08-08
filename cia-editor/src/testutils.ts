@@ -8,6 +8,10 @@ export const fromHexString = (hexString: string): Uint8Array => {
 export const TEST_INITIAL_TITLE_ID = fromHexString('000400000ff3ff00');
 export const TEST_NEW_TITLE_ID = fromHexString('000400000abcde00');
 
+// Copied from ctrtool output
+export const TEST_INITIAL_EXHEADER_HASH = fromHexString(
+  '8B3BB6271FA0647588858F380B4EC8D05BBCC464B0E3CD1CBDA2CE68194BC609'
+);
 // This is just the first line of the signature from ctrtool
 export const TEST_INITIAL_EXHEADER_SIGNATURE = fromHexString(
   '47608BA0669F6FED162395F40463B085CF1AC38EF153C198D02BF6910098D81E'

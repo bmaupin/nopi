@@ -92,7 +92,6 @@ export class CiaFile {
     return this.ticket.titleId;
   }
 
-  // TODO: Make the ticketId/titleKey generation a separate process (with tests)
   set titleId(newTitleId: Uint8Array) {
     this.ncchExHeader.aci2ProgramId = newTitleId;
     this.ncchExHeader.programId = newTitleId;
@@ -104,8 +103,6 @@ export class CiaFile {
     this.titleMetadata.titleId = newTitleId;
 
     this.ticket.titleId = newTitleId;
-    this.ticket.generateNewTicketId();
-    this.ticket.generateNewTitleKey();
   }
 
   /* TODO: how to change file content

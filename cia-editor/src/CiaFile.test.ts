@@ -5,7 +5,6 @@ import { beforeAll, describe, expect, test } from 'vitest';
 
 import { CiaFile } from './CiaFile';
 import {
-  fromHexString,
   TEST_INITIAL_TITLE_ID,
   TEST_NEW_TITLE_ID,
   TEST_TXT_INITIAL_CONTENT,
@@ -40,25 +39,26 @@ describe('CiaFile', () => {
     testCiaFile.titleId = TEST_NEW_TITLE_ID;
 
     expect(testCiaFile.titleId).toEqual(TEST_NEW_TITLE_ID);
-
     expect(testCiaFile.ticket.titleId).toEqual(TEST_NEW_TITLE_ID);
-    expect(testCiaFile.ticket.ticketId).not.toEqual(
-      fromHexString('0004a13e80326061')
-    );
-    expect(testCiaFile.ticket.titleKey).not.toEqual(
-      fromHexString('3A9F60D1AB3FFEA3B00816EB7B7CEB7E')
-    );
-
     expect(testCiaFile.titleMetadata.titleId).toEqual(TEST_NEW_TITLE_ID);
-
     expect(testCiaFile.ncchHeader.titleId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.ncchHeader.programId).toEqual(TEST_NEW_TITLE_ID);
-
     expect(testCiaFile.ncchExHeader.jumpId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.ncchExHeader.programId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.ncchExHeader.aci2ProgramId).toEqual(TEST_NEW_TITLE_ID);
 
     testCiaFile.titleId = TEST_INITIAL_TITLE_ID;
+
+    expect(testCiaFile.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaFile.ticket.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaFile.titleMetadata.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaFile.ncchHeader.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaFile.ncchHeader.programId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaFile.ncchExHeader.jumpId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaFile.ncchExHeader.programId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaFile.ncchExHeader.aci2ProgramId).toEqual(
+      TEST_INITIAL_TITLE_ID
+    );
   });
 
   // Enable this manually for testing as needed

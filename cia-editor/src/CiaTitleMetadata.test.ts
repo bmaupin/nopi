@@ -6,7 +6,12 @@ import { CiaRomFs } from './CiaRomFs';
 
 import { CiaTitleMetadata } from './CiaTitleMetadata';
 import {
-  fromHexString,
+  TEST_INITIAL_CHUNK_HASH,
+  TEST_INITIAL_CONTENT_CHUNK_HASH,
+  TEST_INITIAL_INFO_RECORD_HASH,
+  TEST_INITIAL_TITLE_ID,
+  TEST_INITIAL_TMD_SIGNATURE,
+  TEST_NEW_TITLE_ID,
   TEST_TXT_INITIAL_CONTENT,
   TEST_TXT_NEW_CONTENT,
 } from './testutils';
@@ -25,69 +30,88 @@ beforeAll(async () => {
 
 describe('title metadata', () => {
   test('signature', () => {
+    expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
+      // ctrtool only returns the first part of the signature, which should be plenty just to test
+      TEST_INITIAL_TMD_SIGNATURE
+    );
+
     // Change the RomFS file content and make sure the signature changes
     testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
     expect(testCiaTitleMetadata.signature.slice(0, 4)).not.toEqual(
-      fromHexString('7A7F734B')
+      TEST_INITIAL_TMD_SIGNATURE
     );
 
     // Reset the content and check the signature again
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
-      // ctrtool only returns the first part of the signature, which should be plenty just to test
-      fromHexString('7A7F734B')
+      TEST_INITIAL_TMD_SIGNATURE
     );
   });
 
-  test('get titleId', () => {
-    expect(testCiaTitleMetadata.titleId).toEqual(
-      fromHexString('000400000ff3ff00')
+  test('titleId', () => {
+    expect(testCiaTitleMetadata.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+
+    testCiaTitleMetadata.titleId = TEST_NEW_TITLE_ID;
+    expect(testCiaTitleMetadata.titleId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaTitleMetadata.titleId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaTitleMetadata.signature.slice(0, 4)).not.toEqual(
+      TEST_INITIAL_TMD_SIGNATURE
+    );
+
+    // Reset to the initial value
+    testCiaTitleMetadata.titleId = TEST_INITIAL_TITLE_ID;
+    expect(testCiaTitleMetadata.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaTitleMetadata.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
+      TEST_INITIAL_TMD_SIGNATURE
     );
   });
 
   test('infoRecordHash', () => {
+    expect(testCiaTitleMetadata.infoRecordHash).toEqual(
+      TEST_INITIAL_INFO_RECORD_HASH
+    );
+
     // Change the RomFS file content and make sure the hash changes
     testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
     expect(testCiaTitleMetadata.infoRecordHash).not.toEqual(
-      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0x2fa4 0x2fc4
-      new Uint8Array([
-        0x0e, 0xb2, 0x23, 0x23, 0x2c, 0xb0, 0x8d, 0x2f, 0x5f, 0x6a, 0x73, 0x6a,
-        0x76, 0x7f, 0x0c, 0x50, 0x03, 0x17, 0x8b, 0xca, 0xc6, 0x8f, 0x1b, 0xb0,
-        0xbf, 0xd1, 0x05, 0x00, 0x8a, 0x23, 0x47, 0x32,
-      ])
+      TEST_INITIAL_INFO_RECORD_HASH
+    );
+    expect(testCiaTitleMetadata.signature.slice(0, 4)).not.toEqual(
+      TEST_INITIAL_TMD_SIGNATURE
     );
 
     // Reset the content and check the hash again
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaTitleMetadata.infoRecordHash).toEqual(
-      new Uint8Array([
-        0x0e, 0xb2, 0x23, 0x23, 0x2c, 0xb0, 0x8d, 0x2f, 0x5f, 0x6a, 0x73, 0x6a,
-        0x76, 0x7f, 0x0c, 0x50, 0x03, 0x17, 0x8b, 0xca, 0xc6, 0x8f, 0x1b, 0xb0,
-        0xbf, 0xd1, 0x05, 0x00, 0x8a, 0x23, 0x47, 0x32,
-      ])
+      TEST_INITIAL_INFO_RECORD_HASH
+    );
+    expect(testCiaTitleMetadata.signature.slice(0, 4)).toEqual(
+      TEST_INITIAL_TMD_SIGNATURE
     );
   });
 
   test('contentChunkHash', () => {
+    expect(testCiaTitleMetadata.contentChunkHash).toEqual(
+      TEST_INITIAL_CONTENT_CHUNK_HASH
+    );
+
     // Change the RomFS file content and make sure the hash changes
     testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
     expect(testCiaTitleMetadata.contentChunkHash).not.toEqual(
-      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0x2fc8 0x2fe8
-      new Uint8Array([
-        0xb4, 0x78, 0x88, 0x9f, 0xdb, 0x8a, 0x50, 0xe0, 0xc3, 0xb1, 0x46, 0xa5,
-        0x9a, 0xae, 0xc3, 0x43, 0x64, 0x62, 0x51, 0xc5, 0x37, 0xd3, 0x43, 0xe8,
-        0x12, 0x7d, 0x74, 0x53, 0x91, 0x8e, 0x5e, 0x51,
-      ])
+      TEST_INITIAL_CONTENT_CHUNK_HASH
+    );
+    expect(testCiaTitleMetadata.infoRecordHash).not.toEqual(
+      TEST_INITIAL_INFO_RECORD_HASH
     );
 
     // Reset the content and check the hash again
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaTitleMetadata.contentChunkHash).toEqual(
-      new Uint8Array([
-        0xb4, 0x78, 0x88, 0x9f, 0xdb, 0x8a, 0x50, 0xe0, 0xc3, 0xb1, 0x46, 0xa5,
-        0x9a, 0xae, 0xc3, 0x43, 0x64, 0x62, 0x51, 0xc5, 0x37, 0xd3, 0x43, 0xe8,
-        0x12, 0x7d, 0x74, 0x53, 0x91, 0x8e, 0x5e, 0x51,
-      ])
+      TEST_INITIAL_CONTENT_CHUNK_HASH
+    );
+    expect(testCiaTitleMetadata.infoRecordHash).toEqual(
+      TEST_INITIAL_INFO_RECORD_HASH
     );
   });
 
@@ -96,21 +120,23 @@ describe('title metadata', () => {
   });
 
   test('contentHash', () => {
+    expect(testCiaTitleMetadata.contentHash).toEqual(TEST_INITIAL_CHUNK_HASH);
+
     // Change the RomFS file content and make sure the hash changes
     // (The only way to test this is to change something inside the content (NCCH))
     testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
     expect(testCiaTitleMetadata.contentHash).not.toEqual(
-      fromHexString(
-        '44CC44CB6E1726BB4641122E0161560AFC9F5A974BF802152CC3A5C25EC45666'
-      )
+      TEST_INITIAL_CHUNK_HASH
+    );
+    expect(testCiaTitleMetadata.contentChunkHash).not.toEqual(
+      TEST_INITIAL_CONTENT_CHUNK_HASH
     );
 
     // Reset the content and check the hash again
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
-    expect(testCiaTitleMetadata.contentHash).toEqual(
-      fromHexString(
-        '44CC44CB6E1726BB4641122E0161560AFC9F5A974BF802152CC3A5C25EC45666'
-      )
+    expect(testCiaTitleMetadata.contentHash).toEqual(TEST_INITIAL_CHUNK_HASH);
+    expect(testCiaTitleMetadata.contentChunkHash).toEqual(
+      TEST_INITIAL_CONTENT_CHUNK_HASH
     );
   });
 });

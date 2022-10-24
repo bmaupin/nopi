@@ -92,8 +92,6 @@ export class NcchExHeader {
     );
 
     this.signature.set(getSignature(dataToSign));
-
-    // TODO: updating the signature here should trigger an update in the exheader hash in the NCCH header
   };
 
   // *** "ACI (for limitation of first ACI)" ***
@@ -111,5 +109,6 @@ export class NcchExHeader {
     copyOfNewId.reverse();
 
     this._aci2ProgramId.set(copyOfNewId);
+    this.updateSignature();
   }
 }

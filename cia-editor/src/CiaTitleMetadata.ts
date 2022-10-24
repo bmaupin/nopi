@@ -53,6 +53,7 @@ export class CiaTitleMetadata {
 
   set titleId(newTitleId: Uint8Array) {
     this.titleId.set(newTitleId);
+    this.updateSignature();
   }
 
   // This is a hash of all of the info records

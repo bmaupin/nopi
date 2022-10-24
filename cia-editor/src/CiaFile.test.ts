@@ -48,22 +48,11 @@ describe('CiaFile', () => {
     expect(testCiaFile.ticket.titleKey).not.toEqual(
       fromHexString('3A9F60D1AB3FFEA3B00816EB7B7CEB7E')
     );
-    expect(testCiaFile.ticket.signature.slice(0, 4)).not.toEqual(
-      fromHexString('84C81489')
-    );
 
     expect(testCiaFile.titleMetadata.titleId).toEqual(TEST_NEW_TITLE_ID);
-    expect(testCiaFile.titleMetadata.signature.slice(0, 4)).not.toEqual(
-      fromHexString('7A7F734B')
-    );
 
     expect(testCiaFile.ncchHeader.titleId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.ncchHeader.programId).toEqual(TEST_NEW_TITLE_ID);
-    expect(testCiaFile.ncchHeader.signature.slice(0, 32)).not.toEqual(
-      fromHexString(
-        '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
-      )
-    );
 
     expect(testCiaFile.ncchExHeader.jumpId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaFile.ncchExHeader.programId).toEqual(TEST_NEW_TITLE_ID);

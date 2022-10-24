@@ -4,7 +4,13 @@ import { beforeAll, describe, expect, test } from 'vitest';
 
 import { CiaFile } from './CiaFile';
 import { CiaTicket } from './CiaTicket';
-import { fromHexString } from './testutils';
+import {
+  TEST_INITIAL_TICKET_ID,
+  TEST_INITIAL_TICKET_SIGNATURE,
+  TEST_INITIAL_TITLE_ID,
+  TEST_INITIAL_TITLE_KEY,
+  TEST_NEW_TITLE_ID,
+} from './testutils';
 
 let testCiaTicket: CiaTicket;
 
@@ -17,32 +23,43 @@ beforeAll(async () => {
 });
 
 describe('ticket', () => {
-  test('get signature', () => {
-    // ctrtool only returns the first part of the signature, which should be plenty just to test
+  test('signature', () => {
     expect(testCiaTicket.signature.slice(0, 4)).toEqual(
-      fromHexString('84C81489')
+      TEST_INITIAL_TICKET_SIGNATURE
     );
-  });
 
-  // Regenerate the signature in-place and make sure it doesn't chagne
-  test('updateSignature', () => {
-    testCiaTicket.updateSignature();
+    testCiaTicket.titleId = TEST_NEW_TITLE_ID;
+    expect(testCiaTicket.signature.slice(0, 4)).not.toEqual(
+      TEST_INITIAL_TICKET_SIGNATURE
+    );
+
+    testCiaTicket.titleId = TEST_INITIAL_TITLE_ID;
     expect(testCiaTicket.signature.slice(0, 4)).toEqual(
-      fromHexString('84C81489')
+      TEST_INITIAL_TICKET_SIGNATURE
     );
   });
 
-  test('get titleKey', () => {
-    expect(testCiaTicket.titleKey).toEqual(
-      fromHexString('3A9F60D1AB3FFEA3B00816EB7B7CEB7E')
-    );
+  test('titleKey', () => {
+    expect(testCiaTicket.titleKey).toEqual(TEST_INITIAL_TITLE_KEY);
+
+    testCiaTicket.generateNewTitleKey();
+    expect(testCiaTicket.titleKey).not.toEqual(TEST_INITIAL_TITLE_KEY);
   });
 
-  test('get ticketId', () => {
-    expect(testCiaTicket.ticketId).toEqual(fromHexString('0004a13e80326061'));
+  test('ticketId', () => {
+    expect(testCiaTicket.ticketId).toEqual(TEST_INITIAL_TICKET_ID);
+
+    testCiaTicket.generateNewTicketId();
+    expect(testCiaTicket.ticketId).not.toEqual(TEST_INITIAL_TICKET_ID);
   });
 
-  test('get titleId', () => {
-    expect(testCiaTicket.titleId).toEqual(fromHexString('000400000ff3ff00'));
+  test('titleId', () => {
+    expect(testCiaTicket.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+
+    testCiaTicket.titleId = TEST_NEW_TITLE_ID;
+    expect(testCiaTicket.titleId).toEqual(TEST_NEW_TITLE_ID);
+
+    testCiaTicket.titleId = TEST_INITIAL_TITLE_ID;
+    expect(testCiaTicket.titleId).toEqual(TEST_INITIAL_TITLE_ID);
   });
 });

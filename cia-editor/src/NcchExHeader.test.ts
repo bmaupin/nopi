@@ -26,16 +26,14 @@ describe('NCCH', () => {
       TEST_INITIAL_EXHEADER_SIGNATURE
     );
 
-    // Change something inside the section used to calculate the signature, then regenerate it
+    // Change something inside the section used to calculate the signature
     testCiaNcchExHeader.aci2ProgramId = TEST_NEW_TITLE_ID;
-    testCiaNcchExHeader.updateSignature();
     expect(testCiaNcchExHeader.signature.slice(0, 32)).not.toEqual(
       TEST_INITIAL_EXHEADER_SIGNATURE
     );
 
     // Reset the property and check the signature again
     testCiaNcchExHeader.aci2ProgramId = TEST_INITIAL_TITLE_ID;
-    testCiaNcchExHeader.updateSignature();
     expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
       TEST_INITIAL_EXHEADER_SIGNATURE
     );
@@ -49,10 +47,16 @@ describe('NCCH', () => {
     testCiaNcchExHeader.jumpId = TEST_NEW_TITLE_ID;
     expect(testCiaNcchExHeader.jumpId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaNcchExHeader.jumpId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
 
     testCiaNcchExHeader.jumpId = TEST_INITIAL_TITLE_ID;
     expect(testCiaNcchExHeader.jumpId).toEqual(TEST_INITIAL_TITLE_ID);
     expect(testCiaNcchExHeader.jumpId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
   });
 
   test('programId', () => {
@@ -62,10 +66,16 @@ describe('NCCH', () => {
     testCiaNcchExHeader.programId = TEST_NEW_TITLE_ID;
     expect(testCiaNcchExHeader.programId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaNcchExHeader.programId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
 
     testCiaNcchExHeader.programId = TEST_INITIAL_TITLE_ID;
     expect(testCiaNcchExHeader.programId).toEqual(TEST_INITIAL_TITLE_ID);
     expect(testCiaNcchExHeader.programId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
   });
 
   test('aci2ProgramId', () => {
@@ -75,9 +85,15 @@ describe('NCCH', () => {
     testCiaNcchExHeader.aci2ProgramId = TEST_NEW_TITLE_ID;
     expect(testCiaNcchExHeader.aci2ProgramId).toEqual(TEST_NEW_TITLE_ID);
     expect(testCiaNcchExHeader.aci2ProgramId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).not.toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
 
     testCiaNcchExHeader.aci2ProgramId = TEST_INITIAL_TITLE_ID;
     expect(testCiaNcchExHeader.aci2ProgramId).toEqual(TEST_INITIAL_TITLE_ID);
     expect(testCiaNcchExHeader.aci2ProgramId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testCiaNcchExHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_EXHEADER_SIGNATURE
+    );
   });
 });

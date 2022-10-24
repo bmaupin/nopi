@@ -93,24 +93,19 @@ export class CiaFile {
   }
 
   // TODO: Make the ticketId/titleKey generation a separate process (with tests)
-  // TODO: update signatures when file is saved (e.g. toBlob)
   set titleId(newTitleId: Uint8Array) {
-    this.ticket.titleId = newTitleId;
-    this.ticket.generateNewTicketId();
-    this.ticket.generateNewTitleKey();
-    this.ticket.updateSignature();
-
-    this.titleMetadata.titleId = newTitleId;
-    this.titleMetadata.updateSignature();
-
-    this.ncchHeader.titleId = newTitleId;
-    this.ncchHeader.programId = newTitleId;
-    this.ncchHeader.updateSignature();
-
     this.ncchExHeader.aci2ProgramId = newTitleId;
     this.ncchExHeader.programId = newTitleId;
     this.ncchExHeader.jumpId = newTitleId;
-    this.ncchExHeader.updateSignature();
+
+    this.ncchHeader.titleId = newTitleId;
+    this.ncchHeader.programId = newTitleId;
+
+    this.titleMetadata.titleId = newTitleId;
+
+    this.ticket.titleId = newTitleId;
+    this.ticket.generateNewTicketId();
+    this.ticket.generateNewTitleKey();
   }
 
   /* TODO: how to change file content

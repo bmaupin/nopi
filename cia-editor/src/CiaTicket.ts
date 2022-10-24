@@ -53,6 +53,7 @@ export class CiaTicket {
   // https://github.com/3DSGuy/Project_CTR/blob/319c4c6a24747a6def3c012312ed13a2f76bb369/makerom/cia.c#L188
   generateNewTitleKey = () => {
     this.titleKey.set(new Uint8Array(randomBytes(0x10)));
+    this.updateSignature();
   };
 
   // 0x2c10
@@ -68,6 +69,7 @@ export class CiaTicket {
   // https://github.com/3DSGuy/Project_CTR/blob/319c4c6a24747a6def3c012312ed13a2f76bb369/makerom/cia.c#L179
   generateNewTicketId = () => {
     this.ticketId.set(new Uint8Array([0x00, 0x04, ...randomBytes(6)]));
+    this.updateSignature();
   };
 
   // 0x2c1c
@@ -81,6 +83,7 @@ export class CiaTicket {
 
   set titleId(newTitleId: Uint8Array) {
     this.titleId.set(newTitleId);
+    this.updateSignature();
   }
 
   get size() {

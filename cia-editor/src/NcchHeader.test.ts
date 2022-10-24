@@ -7,8 +7,9 @@ import { CiaRomFs } from './CiaRomFs';
 import { NcchExHeader } from './NcchExHeader';
 import { NcchHeader } from './NcchHeader';
 import {
-  fromHexString,
   TEST_INITIAL_EXHEADER_HASH,
+  TEST_INITIAL_NCCH_HEADER_SIGNATURE,
+  TEST_INITIAL_ROMFS_HASH,
   TEST_INITIAL_TITLE_ID,
   TEST_NEW_TITLE_ID,
   TEST_TXT_INITIAL_CONTENT,
@@ -31,21 +32,20 @@ beforeAll(async () => {
 
 describe('NCCH', () => {
   test('signature', () => {
+    expect(testNcchHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
+    );
+
     // Change the RomFS file content and make sure the signature changes
     testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
     expect(testNcchHeader.signature.slice(0, 32)).not.toEqual(
-      fromHexString(
-        '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
-      )
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
     );
 
     // Reset the content and check the signature again
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testNcchHeader.signature.slice(0, 32)).toEqual(
-      // Just compare the first line of the signature from ctrtool
-      fromHexString(
-        '8F76B8644AAF4ADE7FA8B17440C53EB27329EA7E20864753FC2F98067DE00E74'
-      )
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
     );
   });
 
@@ -62,11 +62,17 @@ describe('NCCH', () => {
     testNcchHeader.titleId = TEST_NEW_TITLE_ID;
     expect(testNcchHeader.titleId).toEqual(TEST_NEW_TITLE_ID);
     expect(testNcchHeader.titleId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testNcchHeader.signature.slice(0, 32)).not.toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
+    );
 
     // Reset to the initial value
     testNcchHeader.titleId = TEST_INITIAL_TITLE_ID;
     expect(testNcchHeader.titleId).toEqual(TEST_INITIAL_TITLE_ID);
     expect(testNcchHeader.titleId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testNcchHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
+    );
   });
 
   test('programId', () => {
@@ -76,10 +82,16 @@ describe('NCCH', () => {
     testNcchHeader.programId = TEST_NEW_TITLE_ID;
     expect(testNcchHeader.programId).toEqual(TEST_NEW_TITLE_ID);
     expect(testNcchHeader.programId).toEqual(TEST_NEW_TITLE_ID);
+    expect(testNcchHeader.signature.slice(0, 32)).not.toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
+    );
 
     testNcchHeader.programId = TEST_INITIAL_TITLE_ID;
     expect(testNcchHeader.programId).toEqual(TEST_INITIAL_TITLE_ID);
     expect(testNcchHeader.programId).toEqual(TEST_INITIAL_TITLE_ID);
+    expect(testNcchHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
+    );
   });
 
   test('get productCode', () => {
@@ -96,11 +108,17 @@ describe('NCCH', () => {
     expect(testNcchHeader.ncchExHeaderHash.slice(0, 32)).not.toEqual(
       TEST_INITIAL_EXHEADER_HASH
     );
+    expect(testNcchHeader.signature.slice(0, 32)).not.toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
+    );
 
     // Reset to the initial value and check again
     testNcchExHeader.jumpId = TEST_INITIAL_TITLE_ID;
     expect(testNcchHeader.ncchExHeaderHash.slice(0, 32)).toEqual(
       TEST_INITIAL_EXHEADER_HASH
+    );
+    expect(testNcchHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
     );
   });
 
@@ -113,21 +131,21 @@ describe('NCCH', () => {
   });
 
   test('romFsHash', () => {
+    expect(testNcchHeader.romFsHash).toEqual(TEST_INITIAL_ROMFS_HASH);
+
     // Change the RomFS file content and make sure the hash changes
     // (The only way to test this is to change something inside the RomFS)
     testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
-    expect(testNcchHeader.romFsHash).not.toEqual(
-      fromHexString(
-        '9C27E3EE3C26C56BBB9851A72C13CE6A3A877ED9D17075AF8A11396AB524EE92'
-      )
+    expect(testNcchHeader.romFsHash).not.toEqual(TEST_INITIAL_ROMFS_HASH);
+    expect(testNcchHeader.signature.slice(0, 32)).not.toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
     );
 
     // Reset the content and check the hash again
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
-    expect(testNcchHeader.romFsHash).toEqual(
-      fromHexString(
-        '9C27E3EE3C26C56BBB9851A72C13CE6A3A877ED9D17075AF8A11396AB524EE92'
-      )
+    expect(testNcchHeader.romFsHash).toEqual(TEST_INITIAL_ROMFS_HASH);
+    expect(testNcchHeader.signature.slice(0, 32)).toEqual(
+      TEST_INITIAL_NCCH_HEADER_SIGNATURE
     );
   });
 });

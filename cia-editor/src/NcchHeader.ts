@@ -85,6 +85,7 @@ export class NcchHeader {
     copyOfNewTitleId.reverse();
 
     this._titleId.set(copyOfNewTitleId);
+    this.updateSignature();
   }
 
   // 0x3a18
@@ -99,6 +100,7 @@ export class NcchHeader {
     copyOfNewProgramId.reverse();
 
     this._programId.set(copyOfNewProgramId);
+    this.updateSignature();
   }
 
   // TODO: does this need to be changed/be unique?
@@ -125,6 +127,7 @@ export class NcchHeader {
     );
 
     this.ncchExHeaderHash.set(getHash(dataToHash));
+    this.updateSignature();
   }
 
   // RomFS offset, in bytes

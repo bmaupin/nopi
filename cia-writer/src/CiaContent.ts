@@ -81,6 +81,9 @@ export class CiaContent {
     // I think we can ignore this; seems to be set in the RSF file (zero in hello world, non-zero in NSUI)
     remasterVersion: new Uint8Array(2),
 
+    // TODO: The hello world elf ended up being 943K! A smaller one to test with is here if we ever need it:
+    //       https://github.com/JonathanSalwan/binary-samples/blob/master/elf-Linux-ARMv7-ls
+
     // 0x3b10
     // This comes directly from the ELF file!
     /*

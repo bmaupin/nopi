@@ -13,4 +13,12 @@ describe('header', () => {
     const dataView = new DataView(await testCiaHeader.arrayBuffer());
     expect(dataView.getInt32(0, true)).toBe(testCiaHeader.size);
   });
+
+  // TODO: delete this
+  test('dump header contents', async () => {
+    console.log(
+      'testCiaFile.arrayBuffer()=',
+      await testCiaHeader.arrayBuffer()
+    );
+  });
 });

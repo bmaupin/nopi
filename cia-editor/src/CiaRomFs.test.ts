@@ -52,7 +52,7 @@ describe('RomFS', () => {
     testCiaRomFs.files[0].content = TEST_TXT_NEW_CONTENT;
     expect(testCiaRomFs.masterHashes.length).toBe(1);
     expect(testCiaRomFs.masterHashes[0]).not.toEqual(
-      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xb960 0xb980
+      // To get this value: npx ts-node --files scripts/extract-content.ts src/testdata/test.cia 0xb960 0xb980
       new Uint8Array([
         0x34, 0x25, 0x1f, 0x69, 0xf7, 0xed, 0x8c, 0x4c, 0x40, 0x72, 0x59, 0x35,
         0xb6, 0xf9, 0x68, 0x39, 0xdd, 0xec, 0x56, 0x5c, 0x7d, 0x3a, 0xd5, 0xb5,
@@ -106,7 +106,7 @@ describe('RomFS', () => {
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaRomFs.level1Hashes.length).toBe(1);
     expect(testCiaRomFs.level1Hashes[0]).toEqual(
-      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xd900 0xd920
+      // To get this value: npx ts-node --files scripts/extract-content.ts src/testdata/test.cia 0xd900 0xd920
       new Uint8Array([
         0x59, 0xf8, 0xa2, 0x29, 0x1d, 0xe0, 0xb8, 0xe4, 0xf6, 0xb7, 0xc4, 0x53,
         0x11, 0x03, 0x3d, 0xf9, 0x06, 0xd6, 0xd2, 0x1a, 0x17, 0x83, 0x02, 0x0a,
@@ -131,7 +131,7 @@ describe('RomFS', () => {
     testCiaRomFs.files[0].content = TEST_TXT_INITIAL_CONTENT;
     expect(testCiaRomFs.level2Hashes.length).toBe(1);
     expect(testCiaRomFs.level2Hashes[0]).toEqual(
-      // To get this value: npx ts-node --files ../cia-writer/scripts/extract-content.ts src/testdata/test.cia 0xe900 0xe920
+      // To get this value: npx ts-node --files scripts/extract-content.ts src/testdata/test.cia 0xe900 0xe920
       new Uint8Array([
         0xa7, 0xf4, 0xf8, 0xd9, 0x05, 0x6c, 0x66, 0xd5, 0x5e, 0x71, 0x83, 0x30,
         0x37, 0xac, 0xe1, 0xd9, 0x9c, 0x90, 0xed, 0xeb, 0xc9, 0xb2, 0xbf, 0x8b,

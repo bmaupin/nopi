@@ -3,6 +3,7 @@ import { Blob } from 'fetch-blob';
 import { CiaCertChain } from './CiaCertChain';
 import { CiaHeader } from './CiaHeader';
 import { CiaTicket } from './CiaTicket';
+import utils from './utils';
 
 export class CiaWriter {
   // Node.js doesn't support File; it supports Blob starting with v14
@@ -29,7 +30,7 @@ export class CiaWriter {
     const initialSize = initialArrayBuffer.byteLength;
 
     if (initialSize % 64 !== 0) {
-      const newSize = initialSize + (64 - (initialSize % 64));
+      const newSize = utils.calculateAlignedSize(initialSize, 64);
       const newIntArray = new Uint8Array(newSize);
       newIntArray.set(new Uint8Array(initialArrayBuffer));
 

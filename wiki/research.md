@@ -51,6 +51,15 @@
   - Padding > 0x3900
 - Content: 0x3900
   - Header: 0x3900 -
+  - extended header (https://www.3dbrew.org/wiki/NCCH/Extended_Header#Main_Structure)
+    - SCI: 0x3b00 -
+    - ACI: 0x3d00 -
+    - signature: 0x3f00 -
+    - public key: 0x4000 -
+    - "ACI (for limitation of first ACI)": 0x4100 -
+  - access descriptor? 0x4300?
+  - .code: 0x6300? - 0x21be8? (hello world)
+  - IVFC (hello world): 0x22900 -
 
 #### Create a hello world CIA with a RomFS
 
@@ -129,13 +138,17 @@
    3dstool -xtf cxi contents.bin --romfs romfs.bin
    ```
 
-1. Download RetroArch core from [https://buildbot.libretro.com/nightly/nintendo/3ds/latest/cia/](https://buildbot.libretro.com/nightly/nintendo/3ds/latest/cia/)
+1. ~~Download RetroArch core from [https://buildbot.libretro.com/nightly/nintendo/3ds/latest/cia/](https://buildbot.libretro.com/nightly/nintendo/3ds/latest/cia/)~~
+
+1. Build a RetroArch core with patches for RomFS
+
+   The pre-built RetroArch cores can't load files from RomFS
 
 1. Extract the RetroArch core contents
 
    ```
-   ctrtool --contents=contents ../gambatte_libretro.cia
-   mv contents.0000.3c33a017 contents-retroarch.bin
+   ctrtool --contents=contents /path/to/retroarch_3ds.cia
+   mv contents.0000.* contents-retroarch.bin
    3dstool -xtf cxi contents-retroarch.bin --header header.bin --exh exheader.bin --exefs exefs.bin --logo logo.bin
    ```
 
@@ -154,17 +167,18 @@
 1. Make the CIA from the NCCH
 
    ```
-   makerom -f cia -o retroarch.cia -content retroarch.ncch:0:0
+   makerom -f cia -o retroarch-romfs.cia -content retroarch.ncch:0:0
    ```
 
-makerom -f ncch -o retroarch.ncch -code exefs.bin -exheader exheader.bin -romfs romfs.bin -rsf ../retroarch.rsf
+#### RomFS
 
-<!--  -->
-
-<!-- Updates header, but .code is wrong -->
-<!-- makerom -f ncch -o retroarch.ncch -code exefs.bin -exheader exheader.bin -romfs romfs.bin -rsf ../retroarch.rsf -->
-<!-- Doesn't update header -->
-<!-- 3dstool -ctf cxi newcxi.bin --header header.bin --exh exheader.bin --exefs exefs.bin --romfs romfs.bin -->
+- dummy rom.bin
+  - name: ~0x4a0a60
+  - content: 0x4a0b80 - 0x4ab90
+- rebuilt
+  - name: ~0x4a0a60
+  - content: 0x4a0e30 - 0x4e0b90
+  - followed by same PNG file
 
 ## Differences between CIA files
 

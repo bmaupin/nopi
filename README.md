@@ -1,4 +1,17 @@
-Abandoned attempt at a web application for creating 3DS emulation injects, similar to New Super Ultimate Injector (NSUI).
+# Nopi
+
+#### Name
+
+Nopi is a play on the name NSUI (New Super Ultimate Injector):
+
+- N: ~~New~~ > Newer! 😎
+- ~~S: Super~~ > O: Ordinary 🤔
+- ~~U: Ultimate~~ > P: Primitive 😲
+- I: Injector 😄
+
+#### About
+
+Abandoned attempt at a web application for creating 3DS emulation injects, similar to NSUI.
 
 It was never the goal to match the functionality of NSUI, opting instead for a simpler approach, but still with some advantages:
 

@@ -1,3 +1,11 @@
+#### About
+
+Attempt at a pure TypeScript implementation of a library to modify existing 3DS CIA files.
+
+After first [attempting to write the entire CIA file from scratch](../cia-writer/), it seemed much easier to just take an existing CIA file and modify it as necessary.
+
+For now, the project is on hold as I've grown less fond of the 3DS for emulation (see [Emulation on 3DS | Disadvantages](https://bmaupin.github.io/wiki/other/3ds/emulation-on-3ds.html#disadvantages)) and decided my time would be better spent working on other projects.
+
 #### Goals
 
 22/40 tasks complete (55%)
